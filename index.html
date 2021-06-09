@@ -3,10 +3,12 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Change a map's style</title>
+    <title>Marmara Müsilaj Haritasi</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -21,15 +23,19 @@
             z-index: 0
         }
         
+        body {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 500;
+        }
+        
         #intro {
             position: absolute;
             margin-left: 20px;
             margin-top: 20px;
             z-index: 1;
             width: 400px;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.4);
             padding: 10px;
-            font-family: 'Open Sans', sans-serif;
         }
     </style>
 </head>
@@ -37,8 +43,16 @@
 <body>
 
     <div id="intro">
-        <h2>Marmara Musilaj Haritasi</h2>
-        <p>Görüntülenen musilaj haritası otomatik klasifikasyon yöntemi ile gerçekleştirilmiştir. Kullanılan veri Sentinel-2 uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek elde edilmiştir.</p>
+
+        <p><b>MARMARA MÜSILAJ HARITASI</b></p>
+        <p> Görüntülenen müsilaj haritası otomatik klasifikasyon yöntemi ile gerçekleştirilmiştir. Kullanılan veri <a href="https://apps.sentinel-hub.com/eo-browser/">Sentinel-2</a> uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek
+            elde edilmiştir.</p>
+
+        Veriye vektör formatında <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> ulasabilirsiniz.
+        <p>
+            <i>by <a href="http://bitsnbricks.com/">Bits 'n Bricks</a> & <a href="https://commons.pratt.edu/savi/">SAVI</a></i>
+        </p>
+
 
     </div>
     <div id="map"></div>
@@ -49,8 +63,17 @@
             container: 'map', // container ID
             style: 'mapbox://styles/cankadir/ckposunm609i317qhno3rcvkp', // style URL
             center: [29.1722, 40.8636], // starting position [lng, lat]
-            zoom: 9 // starting zoom
+            zoom: 9, // starting zoom
+            minZoom: 8,
+            maxZoom: 13
         });
+
+
+        // disable map rotation using right click + drag
+        map.dragRotate.disable();
+
+        // disable map rotation using touch rotation gesture
+        map.touchZoomRotate.disableRotation();
     </script>
 
 </body>
