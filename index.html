@@ -51,8 +51,6 @@
         }
         
         #intro {
-            width: 450px;
-            margin-top: 15px;
             padding: 15px 15px 15px 15px;
             font-size: 13px;
             max-height: 100vh;
@@ -67,8 +65,13 @@
         
         #title {
             font-family: 'Raleway', sans-serif;
+            margin-top: 15px;
             font-weight: 700;
             font-size: 16px;
+        }
+        
+        a {
+            color: #fef69a;
         }
     </style>
 </head>
@@ -82,24 +85,25 @@
 
                 <div id="intro">
 
-                    <p id="title"><b>MARMARA MÜSILAJ HARITASI</b></p>
+                    <p id="title"><b>MARMARA MÜSİLAJ HARİTASI</b></p>
                     <p>
-                        Yandaki interaktif harita, son günlerin sıkça tartışılan konularından biri olan Marmara Denizi'ndeki deniz müsilajının güncel yayılımını [1] göstermektedir.
-                        <br><br> Müsilaj oluşumu, Akdeniz'de ilk defa 1729 yılında belgelenmiş, özellikle geçtiğimiz 30 yılda artan sıklıklarda gözlenmeye devam etmiştir [2]. Marmara Denizi'nde ise en belirgin müsilaj oluşumu 2007 yılında görülmüştür.
+                        Yandaki interaktif harita, son günlerin sıkça tartışılan konularından biri olan Marmara Denizi'ndeki deniz müsilajının güncel yayılımını göstermektedir.
+                        <br><br> Müsilaj oluşumu, Akdeniz'de ilk defa 1729 yılında belgelenmiş, özellikle geçtiğimiz 30 yılda artan sıklıklarda gözlenmeye devam etmiştir <sup>[1]</sup>. Marmara Denizi'nde ise en belirgin müsilaj oluşumu 2007 yılında görülmüştür.
                         2007'deki deniz salyası birikimi, İzmit Körfezi'nden Çanakkale Boğazı'na kadar yayılmış, ve bugünküne benzer bir şekilde, daha ağır sanayiden etkilenen ve akıntının Marmara Denizi'ne göre daha yavaş olduğu Körfez'de daha uzun süre
-                        ve yoğun bir şekilde kalmıştır [3].
+                        ve yoğun bir şekilde kalmıştır <sup>[2]</sup>.
                         <br><br>Yine de, bu sene gözlenen vakanın öncekilere göre daha yoğun olduğu aşikar. Çeşitli kaynaklara göre bu da beklendik bir durum, ve birkaç parametrenin birleşimi.
-                        <br><br>Herşeyden önce küresel ısınmanın müsilaj yoğunluğu ve yayılımı ile doğrudan etkisi var: Danovaro ve diğerlerinin 2009 yılında yayınlanan çalışması [4], inceleme yaptıkları 60 yıl boyunca Akdeniz'de görülen iklim anomalileri
-                        ile müsilaj patlamalarının doğrudan eşleştiğini gösteriyor. MGM'nin resmi istatistiklerine bakıldığında [5] Marmara Denizi'nin 1970-2020 yılları arasında 2°C'den fazla ısındığı görülüyor.
+                        <br><br>Herşeyden önce küresel ısınmanın müsilaj yoğunluğu ve yayılımı ile doğrudan etkisi var: Danovaro ve diğerlerinin 2009 yılında yayınlanan çalışması <sup>[3]</sup>, inceleme yaptıkları 60 yıl boyunca Akdeniz'de görülen iklim
+                        anomalileri ile müsilaj patlamalarının doğrudan eşleştiğini gösteriyor. MGM'nin resmi istatistiklerine bakıldığında <sup>[4]</sup> Marmara Denizi'nin 1970-2020 yılları arasında 2°C'den fazla ısındığı görülüyor.
                         <br><br>İkincisi parametre ise tabi ki atık yönetimi. Onyıllardır Marmara Denizi çevresindeki yerleşim alanları, denizi derin deşarj alanı olarak kullanıyor. Haritada nokta olarak yerlerini gördükleriniz, İstanbul'daki atık su
                         deşarj alanları. Bu noktalar dışında denetimsiz deşarjların yapılıyor olduğu ve İstanbul dışındaki şehirlerin deşarj noktalarının bu haritada yer almadığı gerçeğini unutmamak gerek.
                         <br><br>Yeterli oranda arıtılmadan denize boşaltılan atık su, her ne kadar derinden deşarj edilse de, yılların birikimi ile bu atığın etkisi yüzeyde de kendini göstermeye başlıyor. Marmara Denizi'nin dip akıntısı kuzeye, Karadeniz'e
-                        doğru. Fakat yüzey akıntısı ters yönde: interaktif haritada gördüğünüz oklar, yüzey akıntısının basitleştirilmiş bir şeması [6]. Bu yüzey akıntısı deseni ve bilinen deşarj noktaları birlikte düşünüldüğünde, mevcut müsilaj dağılımı
+                        doğru. Fakat yüzey akıntısı ters yönde: interaktif haritada gördüğünüz oklar, yüzey akıntısının basitleştirilmiş bir şeması </sup>[5]<sup>. Bu yüzey akıntısı deseni ve bilinen deşarj noktaları birlikte düşünüldüğünde, mevcut müsilaj dağılımı
                         anlamlı hale geliyor, ve yakın gelecekte ne şekilde yayılmaya devam edeceğine dair ip uçları veriyor.
                         <br><br>Bu çalışma, bir süredir çeşitli uzmanın yaptığı açıklamaları harita üzerinde görselleştirmek amacıyla hazırlandı. Eğer veride veya metinde herhangi bir hata olduğunu düşünüyorsanız bize info@bitsnbricks.com adresinden ulaşabilir,
                         eklemek istediklerinizi #musilajharitasi ile twitter'dan paylaşabilirsiniz!
                         <br><br> Müsilaj verisi Sentinel-2 uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek elde edilmiştir. Uydu görüntülerinin 4,8a ve 11 bantları kompozitleştirilerek, gözetimli bir makina öğrenmesi algoritması
-                        ile eğitilmiş ve tüm Marmara'ya uygulanmıştır. Veriyi vektör formatında <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> indirebilirsiniz.
+                        ile eğitilmiş ve tüm Marmara'ya uygulanmıştır. Veriyi vektör formatında <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> indirebilirsiniz. Sentinel-2 verisine erişmek ve makine öğrenme algoritmasının eğitim setine
+                        <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> ulaşabilirsiniz.
                     </p>
 
                     <p id="kaynak">
@@ -108,13 +112,12 @@
                         <br>[2] Aktan Y, Dede A, Ciftci P S. 2008. Mucilage event associated with diatoms and dinoflagellates in Sea of Marmara, Turkey. Harmful Algae News, 36.
                         <br>[3] Danovaro R, Fonda Umani S, Pusceddu A. (2009) Climate change and the potential spreading of marine mucilage and microbial pathogens in the Mediterranean Sea. PLoS One. 2009 Sep 16;4(9):e7006. doi: 10.1371/journal.pone.0007006.
                         PMID: 19759910; PMCID: PMC2739426.
-                        <br>[4] T.C. Tarım ve Orman Bakanlığı, Meteoroloji Genel Müdürlüğü. Resmi İstatistikler, Deniz Suyu Sıcaklıkları. https://www.mgm.gov.tr/FILES/resmi-istatistikler/denizSuyu/Marmara-Deniz-Suyu-Sicakligi-Analizi-2019.pdf (09.06.2021
-                        tarihinde erişilmiştir).
+                        <br>[4] T.C. Tarım ve Orman Bakanlığı, Meteoroloji Genel Müdürlüğü. Resmi İstatistikler, <a href="https://www.mgm.gov.tr/FILES/resmi-istatistikler/denizSuyu/Marmara-Deniz-Suyu-Sicakligi-Analizi-2019.pdf">Deniz Suyu Sıcaklıkları.</a>                        (09.06.2021 tarihinde erişilmiştir).
                         <br>[5] Beşiktepe, Ş. T., Sur, H. İ., Özsoy, E., Latif, M. A., Oǧuz, T., Ünlüata, Ü. (1994) The circulation and hydrography of the Marmara Sea, Progress in Oceanography, 34 (4). 1994. s. 285-334. ISSN 0079-6611, doi:10.1016/0079-6611(94)90018-3.
                     </p>
 
                     <p>
-                        <i>by <a href="http://bitsnbricks.com/">Bits 'n Bricks</a> & <a href="https://commons.pratt.edu/savi/">SAVI</a></i>
+                        <i>by <a href="http://bitsnbricks.com/">Bits 'n Bricks</a> & <a href="https://commons.pratt.edu/savi/">SAVI</a> & TUM <a href="https://www.ar.tum.de/en/klima/start/">Chair of Building Technology and Climate-Responsive Design</a></i>
                     </p>
 
                 </div>
