@@ -2,25 +2,42 @@
 <html>
 
 <head>
+
+    <!-- Required meta tags -->
     <meta charset="utf-8">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.3/jquery.scrollTo.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
     <title>Marmara Müsilaj Haritasi</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.0/mapbox-gl.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
             padding: 0;
+            height: 50%;
+            background-color: #212529;
         }
         
-        #map {
-            position: absolute;
-            top: 0;
-            bottom: 0;
+        p {
+            color: #efefef
+        }
+        
+        .container {
             width: 100%;
-            z-index: 0
+            height: 100%;
+            margin: 0 0 0 0;
+            max-width: 100%;
+            max-height: 100%;
         }
         
         body {
@@ -28,54 +45,104 @@
             font-weight: 500;
         }
         
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
         #intro {
-            position: absolute;
-            margin-left: 20px;
-            margin-top: 20px;
-            z-index: 1;
-            width: 400px;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 10px;
+            width: 450px;
+            margin-top: 15px;
+            padding: 15px 15px 15px 15px;
+            font-size: 13px;
+            max-height: 100vh;
+            overflow: auto;
+        }
+        
+        #kaynak {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 300;
+            font-size: 11px;
+        }
+        
+        #title {
+            font-family: 'Raleway', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
         }
     </style>
 </head>
 
 <body>
 
-    <div id="intro">
+    <div class="container">
+        <div class="row">
 
-        <p><b>MARMARA MÜSILAJ HARITASI</b></p>
-        <p> Görüntülenen müsilaj haritası otomatik klasifikasyon yöntemi ile gerçekleştirilmiştir. Kullanılan veri <a href="https://apps.sentinel-hub.com/eo-browser/">Sentinel-2</a> uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek
-            elde edilmiştir.</p>
+            <div class="col-3">
 
-        Veriye vektör formatında <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> ulasabilirsiniz.
-        <p>
-            <i>by <a href="http://bitsnbricks.com/">Bits 'n Bricks</a> & <a href="https://commons.pratt.edu/savi/">SAVI</a></i>
-        </p>
+                <div id="intro">
 
+                    <p id="title"><b>MARMARA MÜSILAJ HARITASI</b></p>
+                    <p>
+                        Yandaki interaktif harita, son günlerin sıkça tartışılan konularından biri olan Marmara Denizi'ndeki deniz müsilajının güncel yayılımını [1] göstermektedir.
+                        <br><br> Müsilaj oluşumu, Akdeniz'de ilk defa 1729 yılında belgelenmiş, özellikle geçtiğimiz 30 yılda artan sıklıklarda gözlenmeye devam etmiştir [2]. Marmara Denizi'nde ise en belirgin müsilaj oluşumu 2007 yılında görülmüştür.
+                        2007'deki deniz salyası birikimi, İzmit Körfezi'nden Çanakkale Boğazı'na kadar yayılmış, ve bugünküne benzer bir şekilde, daha ağır sanayiden etkilenen ve akıntının Marmara Denizi'ne göre daha yavaş olduğu Körfez'de daha uzun süre
+                        ve yoğun bir şekilde kalmıştır [3].
+                        <br><br>Yine de, bu sene gözlenen vakanın öncekilere göre daha yoğun olduğu aşikar. Çeşitli kaynaklara göre bu da beklendik bir durum, ve birkaç parametrenin birleşimi.
+                        <br><br>Herşeyden önce küresel ısınmanın müsilaj yoğunluğu ve yayılımı ile doğrudan etkisi var: Danovaro ve diğerlerinin 2009 yılında yayınlanan çalışması [4], inceleme yaptıkları 60 yıl boyunca Akdeniz'de görülen iklim anomalileri
+                        ile müsilaj patlamalarının doğrudan eşleştiğini gösteriyor. MGM'nin resmi istatistiklerine bakıldığında [5] Marmara Denizi'nin 1970-2020 yılları arasında 2°C'den fazla ısındığı görülüyor.
+                        <br><br>İkincisi parametre ise tabi ki atık yönetimi. Onyıllardır Marmara Denizi çevresindeki yerleşim alanları, denizi derin deşarj alanı olarak kullanıyor. Haritada nokta olarak yerlerini gördükleriniz, İstanbul'daki atık su
+                        deşarj alanları. Bu noktalar dışında denetimsiz deşarjların yapılıyor olduğu ve İstanbul dışındaki şehirlerin deşarj noktalarının bu haritada yer almadığı gerçeğini unutmamak gerek.
+                        <br><br>Yeterli oranda arıtılmadan denize boşaltılan atık su, her ne kadar derinden deşarj edilse de, yılların birikimi ile bu atığın etkisi yüzeyde de kendini göstermeye başlıyor. Marmara Denizi'nin dip akıntısı kuzeye, Karadeniz'e
+                        doğru. Fakat yüzey akıntısı ters yönde: interaktif haritada gördüğünüz oklar, yüzey akıntısının basitleştirilmiş bir şeması [6]. Bu yüzey akıntısı deseni ve bilinen deşarj noktaları birlikte düşünüldüğünde, mevcut müsilaj dağılımı
+                        anlamlı hale geliyor, ve yakın gelecekte ne şekilde yayılmaya devam edeceğine dair ip uçları veriyor.
+                        <br><br>Bu çalışma, bir süredir çeşitli uzmanın yaptığı açıklamaları harita üzerinde görselleştirmek amacıyla hazırlandı. Eğer veride veya metinde herhangi bir hata olduğunu düşünüyorsanız bize info@bitsnbricks.com adresinden ulaşabilir,
+                        eklemek istediklerinizi #musilajharitasi ile twitter'dan paylaşabilirsiniz!
+                        <br><br> Müsilaj verisi Sentinel-2 uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek elde edilmiştir. Uydu görüntülerinin 4,8a ve 11 bantları kompozitleştirilerek, gözetimli bir makina öğrenmesi algoritması
+                        ile eğitilmiş ve tüm Marmara'ya uygulanmıştır. Veriyi vektör formatında <a href="https://github.com/PrattSAVI/Musilaj">buradan</a> indirebilirsiniz.
+                    </p>
 
+                    <p id="kaynak">
+                        <br>[1] Vollenweider, R. A., Montanari, G., Rinaldi, A. (1995) Statistical inferences about the mucilage events in the Adriatic Sea, with special reference to recurrence patterns and claimed relationship to sun activity cycles,
+                        Science of The Total Environment, 165 (1–3). 1995, s. 213-224, ISSN 0048-9697. doi:10.1016/0048-9697(95)04554-E.
+                        <br>[2] Aktan Y, Dede A, Ciftci P S. 2008. Mucilage event associated with diatoms and dinoflagellates in Sea of Marmara, Turkey. Harmful Algae News, 36.
+                        <br>[3] Danovaro R, Fonda Umani S, Pusceddu A. (2009) Climate change and the potential spreading of marine mucilage and microbial pathogens in the Mediterranean Sea. PLoS One. 2009 Sep 16;4(9):e7006. doi: 10.1371/journal.pone.0007006.
+                        PMID: 19759910; PMCID: PMC2739426.
+                        <br>[4] T.C. Tarım ve Orman Bakanlığı, Meteoroloji Genel Müdürlüğü. Resmi İstatistikler, Deniz Suyu Sıcaklıkları. https://www.mgm.gov.tr/FILES/resmi-istatistikler/denizSuyu/Marmara-Deniz-Suyu-Sicakligi-Analizi-2019.pdf (09.06.2021
+                        tarihinde erişilmiştir).
+                        <br>[5] Beşiktepe, Ş. T., Sur, H. İ., Özsoy, E., Latif, M. A., Oǧuz, T., Ünlüata, Ü. (1994) The circulation and hydrography of the Marmara Sea, Progress in Oceanography, 34 (4). 1994. s. 285-334. ISSN 0079-6611, doi:10.1016/0079-6611(94)90018-3.
+                    </p>
+
+                    <p>
+                        <i>by <a href="http://bitsnbricks.com/">Bits 'n Bricks</a> & <a href="https://commons.pratt.edu/savi/">SAVI</a></i>
+                    </p>
+
+                </div>
+            </div>
+            <div class="col-9">
+                <div id="map"></div>
+            </div>
+        </div>
     </div>
-    <div id="map"></div>
-
-    <script>
-        mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w';
-        var map = new mapboxgl.Map({
-            container: 'map', // container ID
-            style: 'mapbox://styles/cankadir/ckposunm609i317qhno3rcvkp', // style URL
-            center: [29.1722, 40.8636], // starting position [lng, lat]
-            zoom: 9, // starting zoom
-            minZoom: 8,
-            maxZoom: 13
-        });
-
-
-        // disable map rotation using right click + drag
-        map.dragRotate.disable();
-
-        // disable map rotation using touch rotation gesture
-        map.touchZoomRotate.disableRotation();
-    </script>
-
 </body>
 
 </html>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w';
+    var map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/cankadir/ckposunm609i317qhno3rcvkp', // style URL
+        center: [29.1722, 40.8636], // starting position [lng, lat]
+        zoom: 9, // starting zoom
+        minZoom: 8,
+        maxZoom: 13
+    });
+
+
+    // disable map rotation using right click + drag
+    map.dragRotate.disable();
+
+    // disable map rotation using touch rotation gesture
+    map.touchZoomRotate.disableRotation();
+</script>
