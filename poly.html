@@ -175,7 +175,8 @@
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
         tileSize: 512,
-        maxZoom: 10,
+        //maxZoom: 5,
+        //minZoom: 10,
         zoomOffset: -1,
         id: 'mapbox/dark-v10',
         accessToken: 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w'
@@ -184,22 +185,40 @@
     // GEOJSON Geometry
     let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/data.geojson'
 
-    function drawMap(path) {
 
-        //Empty Layer
-        var myLayer = L.geoJSON().addTo(map);
+    // Style Object for the general Polygon Styline
+    function style(data) {
+        return {
+            fillColor: '#ffe000', // Here is the categorical coloring.
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.7
+        };
+    }
 
-        $.ajax({
-            url: path,
-            type: "GET"
-        }).done(function(data) {
+    // Polygons. 
+    function generatePolygon(data, L) {
 
-            console.log(data);
+        //$(".leaflet-interactive").remove();
 
-            myLayer.addData(data);
-        })
+        let geoJsonLayer = L.geoJSON(data, {
+            style: style,
+            //onEachFeature: onEachFeature
+        }).addTo(map);
 
-    };
+        //geoJsonLayer.eachLayer(function(layer) {
+        //    layer._path.id = layer.feature.properties.CRPID;
+        //});
+    }
 
-    drawMap(path);
+
+
+
+
+    $.getJSON(path, function(data) {
+        console.log(data);
+
+        generatePolygon(data, L);
+
+    });
 </script>
