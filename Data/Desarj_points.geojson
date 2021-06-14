@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "Ist_Desarj2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "Istasyon": "Uskudar" }, "geometry": { "type": "Point", "coordinates": [ 29.011337112815795, 41.02825754333012 ] } },
+{ "type": "Feature", "properties": { "id": 2, "Istasyon": "Yenikapi" }, "geometry": { "type": "Point", "coordinates": [ 28.992639792473003, 41.00162644550965 ] } },
+{ "type": "Feature", "properties": { "id": 3, "Istasyon": "Kadikoy" }, "geometry": { "type": "Point", "coordinates": [ 28.993354990518892, 40.999323647188554 ] } },
+{ "type": "Feature", "properties": { "id": 4, "Istasyon": "KCekmece" }, "geometry": { "type": "Point", "coordinates": [ 28.762358793087024, 40.966282147704831 ] } },
+{ "type": "Feature", "properties": { "id": 5, "Istasyon": "BCekmece" }, "geometry": { "type": "Point", "coordinates": [ 28.534172302264068, 40.969902621719079 ] } },
+{ "type": "Feature", "properties": { "id": 6, "Istasyon": "Tuzla" }, "geometry": { "type": "Point", "coordinates": [ 29.255060004046552, 40.831597038430687 ] } },
+{ "type": "Feature", "properties": { "id": 7, "Istasyon": "Buyukada" }, "geometry": { "type": "Point", "coordinates": [ 29.156413759287059, 40.865002141365068 ] } },
+{ "type": "Feature", "properties": { "id": 8, "Istasyon": "Burgazada" }, "geometry": { "type": "Point", "coordinates": [ 29.046528688092089, 40.882839690107154 ] } },
+{ "type": "Feature", "properties": { "id": 9, "Istasyon": "Kinaliada" }, "geometry": { "type": "Point", "coordinates": [ 29.052914384930482, 40.893859710946828 ] } },
+{ "type": "Feature", "properties": { "id": 10, "Istasyon": "Beykoz" }, "geometry": { "type": "Point", "coordinates": [ 29.061190248033022, 41.080395192073844 ] } },
+{ "type": "Feature", "properties": { "id": 11, "Istasyon": "Cubuklu" }, "geometry": { "type": "Point", "coordinates": [ 29.077333289640443, 41.109428421977846 ] } }
+]
+}
