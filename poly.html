@@ -98,7 +98,6 @@
 
     <div class="container">
         <div class="row">
-
             <div class="col-4">
 
                 <div id="intro">
@@ -169,20 +168,38 @@
 </html>
 
 <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w';
-    var map = new mapboxgl.Map({
-        container: 'map', // container ID
-        style: 'mapbox://styles/cankadir/ckposunm609i317qhno3rcvkp', // style URL
-        center: [29.1722, 40.8636], // starting position [lng, lat]
-        zoom: 9, // starting zoom
-        minZoom: 8,
-        maxZoom: 13
-    });
+    // ---  LEAFLET Basemap Tiles
+    //40.70197835318973, 28.28485189674848
+    var map = L.map('map').setView([40.7019, 28.2848], 9);
 
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        tileSize: 512,
+        maxZoom: 10,
+        zoomOffset: -1,
+        id: 'mapbox/dark-v10',
+        accessToken: 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w'
+    }).addTo(map);
 
-    // disable map rotation using right click + drag
-    map.dragRotate.disable();
+    // GEOJSON Geometry
+    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/data.geojson'
 
-    // disable map rotation using touch rotation gesture
-    map.touchZoomRotate.disableRotation();
+    function drawMap(path) {
+
+        //Empty Layer
+        var myLayer = L.geoJSON().addTo(map);
+
+        $.ajax({
+            url: path,
+            type: "GET"
+        }).done(function(data) {
+
+            console.log(data);
+
+            myLayer.addData(data);
+        })
+
+    };
+
+    drawMap(path);
 </script>
