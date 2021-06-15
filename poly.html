@@ -89,7 +89,14 @@
         }
         
         #controllers {
-            padding: 10px 10px 10px 10px
+            margin: 5px 0px 15px 0px;
+            padding: 15px 15px 15px 15px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        select {
+            width: 100%;
         }
     </style>
 </head>
@@ -105,16 +112,16 @@
 
                     <p id="title"><b>MARMARA MÜSİLAJ HARİTASI</b></p>
 
-
+                    <!-- Control ve dropdown -->
                     <div id='controllers'>
+                        <p>Goruntuleme yapmak istediginiz tarihi secin</p>
                         <form>
                             <select name="dropdown">
-                               <option value = "210613" selected>13 Haziran 2021</option>
-                               <option value = "210606">06 Haziran 2021</option>
-                               <option value = "210603">03 Haziran 2021</option>
+                               <option value = "21-06-13" selected>13 Haziran 2021</option>
+                               <option value = "21-06-06">06 Haziran 2021</option>
+                               <option value = "21-06-03">03 Haziran 2021</option>
                             </select>
                         </form>
-
                     </div>
 
 
@@ -173,7 +180,7 @@
     var map = L.map('map').setView([40.7019, 28.2848], 9);
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
+        attribution: '© <a href="https://www.mapbox.com/about/maps/" style="color:#ffe000">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright"  style="color:#ffe000">OpenStreetMap</a> <strong><a  style="color:#ffe000" href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
         tileSize: 512,
         maxZoom: 14,
         minZoom: 8,
@@ -182,12 +189,8 @@
         accessToken: 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w'
     }).addTo(map);
 
-    // GEOJSON Geometry
-    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/data.geojson'
-
 
     // Style Object for the general Polygon Styline
-
     function style(data) {
         return {
             fillColor: '#ffe000', // Here is the categorical coloring.
@@ -198,7 +201,7 @@
         };
     }
 
-    // Polygons. 
+    // Polygons
     function generatePolygon(data, L) {
 
         $(".leaflet-interactive").remove();
@@ -211,17 +214,47 @@
 
     }
 
+    // Points
+    function generatePts(data, L) {
 
-    $.getJSON(path, function(data) {
+        var geojsonMarkerOptions = {
+            radius: 2.5,
+            fillColor: "#ffffff",
+            //color: "#000",
+            weight: 0,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        geoJsonPoints = L.geoJSON(data, {
+            pointToLayer: function(feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            }
+        }).addTo(map);
+
+        return geoJsonPoints;
+
+    }
+
+    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/data.geojson'
+    let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson'
+
+    $.getJSON(path, function(data) { // Polygons
         console.log(data);
+        //// Desarj Noktalari Add as Geojson Layer
+        $.getJSON(noktalar, function(pts) {
+            generatePts(pts, L);
+        });
 
+        //Create polygon
         geoJsonLayer = generatePolygon(data, L);
+
+        //Desark Noktalari
 
         // Zoom Based Style
         map.on('zoomend', function() {
 
             let zl = map.getZoom();
-            console.log(zl)
 
             if (zl <= 10) {
                 geoJsonLayer.setStyle({
@@ -231,11 +264,22 @@
                 geoJsonLayer.setStyle({
                     weight: 1
                 })
+            } else if (zl === 8) {
+                geoJsonLayer.setStyle({
+                    weight: 0.05
+                })
             } else {
                 geoJsonLayer.setStyle({
                     weight: 0.4
                 })
             }
+
+        });
+
+        // Create the filter -> Filter data based on dropdown.
+        $("form").change(function() {
+            let date = $("select").val();
+            console.log(date);
 
         });
 
