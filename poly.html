@@ -116,10 +116,7 @@
                     <div id='controllers'>
                         <p>Goruntuleme yapmak istediginiz tarihi secin</p>
                         <form>
-                            <select name="dropdown">
-                               <option value = "21-06-13" selected>13 Haziran 2021</option>
-                               <option value = "21-06-06">06 Haziran 2021</option>
-                               <option value = "21-06-03">03 Haziran 2021</option>
+                            <select name="dropdown" id='date-selector'>
                             </select>
                         </form>
                     </div>
@@ -202,10 +199,16 @@
     }
 
     // Polygons
-    function generatePolygon(data, L) {
+    function generatePolygon(data, date, L) {
 
         $(".leaflet-interactive").remove();
-        let geoJsonLayer = L.geoJSON(data, {
+
+        //let filtered = jQuery.extend(true, {}, data);
+        let filtered = data.features.filter(function(f) {
+            return f.properties.date == date;
+        });
+
+        let geoJsonLayer = L.geoJSON(filtered, {
             style: style,
             //onEachFeature: onEachFeature
         }).addTo(map);
@@ -236,20 +239,35 @@
 
     }
 
-    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/data.geojson'
+    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/20210613_data.geojson'
     let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson'
 
+    // ------------------- WORK WITH DATA STARTS HERE--------------------------
     $.getJSON(path, function(data) { // Polygons
-        console.log(data);
+
         //// Desarj Noktalari Add as Geojson Layer
         $.getJSON(noktalar, function(pts) {
             generatePts(pts, L);
         });
 
-        //Create polygon
-        geoJsonLayer = generatePolygon(data, L);
+        // Use Musilaj Data Here
 
-        //Desark Noktalari
+        const uniques = new Set();
+        data.features.forEach((item) => {
+            uniques.add(item.properties.date);
+        });
+
+        let unique_dates = Array.from(uniques);
+        unique_dates.forEach(function(d, i) {
+            const date = new Date(d);
+            longd = date.format('d/m/y');
+
+            $('#date-selector').append(`<option value="${d}">${longd}</option>`);
+            $("#date-selector").prop("selectedIndex", 0);
+        });
+
+        //Create polygon
+        geoJsonLayer = generatePolygon(data, unique_dates[0], L);
 
         // Zoom Based Style
         map.on('zoomend', function() {
@@ -277,9 +295,11 @@
         });
 
         // Create the filter -> Filter data based on dropdown.
-        $("form").change(function() {
-            let date = $("select").val();
-            console.log(date);
+        $('#date-selector').change(function() {
+            let selected_date = $(this).val();
+            console.log(selected_date);
+
+            geoJsonLayer = generatePolygon(data, selected_date, L);
 
         });
 
