@@ -3,6 +3,8 @@ import folium
 import sys
 import matplotlib.pyplot as plt
 import geopandas as gpd
+import contextily as ctx
+import pandas as pd
 
 print( sys.prefix )
 
@@ -12,13 +14,13 @@ folium.GeoJson(boundsdata).add_to(m)
 m
 
 # %% Calculate Footprint
-# Start User
+# Start User -> enter Password
 from sentinelsat import SentinelAPI
 from sentinelsat import geojson_to_wkt
 from sentinelsat import read_geojson
 
 user = 'cansucuoglu'
-password = ''#sifre_123
+password = '' #sifre_123
 
 api = SentinelAPI(user, password, 'https://scihub.copernicus.eu/dhus')
 footprint = geojson_to_wkt(read_geojson(boundsdata))
@@ -29,59 +31,54 @@ print (footprint)
 # See overlapping geometry
 
 products = api.query(footprint,
-                     date = ('20210611', '20210614'),
+                     date = ('20210225', '20210525'),
                      platformname = 'Sentinel-2',
                      processinglevel = 'Level-2A',
-                     cloudcoverpercentage = (0, 30))
+                     cloudcoverpercentage = (0, 20))
 
-
-import contextily as ctx
 areas = api.to_geodataframe(products)
 areas['i'] = [i for i in range(len(areas))]
 
 gdf2 = gpd.read_file(boundsdata)
 
-f, ax = plt.subplots(1)
-areas.to_crs(epsg=3857).plot(ax=ax,column='uuid',cmap=None,alpha=0.35)
-areas.to_crs(epsg=3857).apply(lambda x: ax.annotate(s=x.i, xy=x.geometry.centroid.coords[0], ha='center'),axis=1)
-gdf2.to_crs(epsg=3857).plot(ax=ax , facecolor='None' , edgecolor='red')
-ctx.add_basemap(ax)
-plt.show()
+#%% Start with some dates.
+# For May: ['05/24','05/22','05/19','05/17','05/14','05/12','05/09','05/04']
 
-# %% Choose One to Start
-import contextily as ctx
-print( len( areas ))
+#All dates on May
+dates = ['05/24','05/19','05/17','05/14','05/12','05/09']
 
-single = areas[ areas['i'] == 9 ]
-ax = single.to_crs(epsg=3857).plot( alpha = 0.25)
-gdf2.to_crs(epsg=3857).plot(ax=ax , facecolor='None' , edgecolor='red')
-ctx.add_basemap(ax)
-print( single['title'].tolist() )
+areas['date'] = pd.to_datetime( areas['generationdate'] )
+areas['date2'] = areas['date'].dt.strftime('%m/%d') #convert to month/day
 
-#%% Plot one last time
-
-import contextily as ctx
-print( len( areas ))
-
-remove = [1,2,3]
-
-single = areas[ ~areas['i'].isin(remove) ]
-ax = single.to_crs(epsg=3857).plot( alpha = 0.25)
-gdf2.to_crs(epsg=3857).plot(ax=ax , facecolor='None' , edgecolor='red')
-single.to_crs(epsg=3857).apply(lambda x: ax.annotate(s=x.i, xy=x.geometry.centroid.coords[0], ha='center'),axis=1)
-ctx.add_basemap(ax)
+areas = areas[ areas['date2'].isin(dates) ].copy()
+areas = areas[ ~areas['title'].str.contains("TTL") ] #Yamuk Projeksiyonlu
+areas = areas[ ~areas['title'].str.contains("TTK") ] #Yamuk Projeksiyonlu
 
 
-#%%
-import contextily as ctx
-remove = [1,2,3,7]
+print( len(areas))
+areas[['title','date2']]
 
-single = areas[ ~areas['i'].isin(remove) ]
-print( len(single) )
-for a in single['i'].unique().tolist():
-    single = areas[ areas['i'] == a ]
-    api.download( single['uuid'].tolist()[0] )
+#%% Plot all and Check
+
+for i in dates:
+
+    temp = areas[ areas['date2'] == i ].copy()
+
+    print(i)
+
+    f, ax = plt.subplots(1)
+    temp.to_crs(epsg=3857).plot(ax=ax,column='uuid',cmap=None,alpha=0.35)
+    temp.to_crs(epsg=3857).apply(lambda x: ax.annotate(text=x.i, xy=x.geometry.centroid.coords[0], ha='center'),axis=1)
+    gdf2.to_crs(epsg=3857).plot(ax=ax , facecolor='None' , edgecolor='red')
+    ctx.add_basemap(ax)
+    plt.show()
 
 
+# %% DOWNLOAD
+
+print( len(areas) )
+
+for i,r in areas.iterrows():
+    api.download( r['uuid'].tolist()[0] )
 
 # %%
