@@ -239,7 +239,7 @@
 
     }
 
-    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/20210616_data.geojson'
+    let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/20210616_data_all.geojson'
     let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson'
 
     // ------------------- WORK WITH DATA STARTS HERE--------------------------
@@ -259,6 +259,7 @@
             uniques.add(item.properties.date);
         });
         let unique_dates = Array.from(uniques); // Make array
+
         //Insert into dropdown
         unique_dates.forEach(function(d, i) {
             const date = new Date(d);
@@ -266,6 +267,8 @@
             $('#date-selector').append(`<option value="${d}">${longd}</option>`);
             $("#date-selector").prop("selectedIndex", 0); // Select first
         });
+
+
 
         //Create Initial  polygon
         geoJsonLayer = generatePolygon(data, unique_dates[0], L);

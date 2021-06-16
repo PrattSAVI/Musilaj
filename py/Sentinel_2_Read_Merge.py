@@ -13,10 +13,16 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-folder_path = r'D:\SAVI\Musilaj_Mapping\RasterData\210613'
+folder_path = r'D:\SAVI\Musilaj_Mapping\RasterData\2105'
 folder_list = os.listdir( folder_path )
 
 [i for i in folder_list]
+
+#%% Filter Some if necessary
+
+#05/14 calismamisti
+folder_list = [i for i in folder_list if not '20210514' in i]
+folder_list
 
 #%% Create a file list for Bands.
 # Creates a DF to use for merging
@@ -78,10 +84,9 @@ def merge_plot( df , band , filename):
     mosaic, out_transform =  merge(images)
 
     # test -> removing 0 value
-    mosaic = mosaic.astype( np.float32 )
-    mosaic[mosaic==0] = np.nan
-
-    print( mosaic.dtype )
+    #mosaic = mosaic.astype( np.float32 )
+    #mosaic[mosaic==0] = np.nan
+    #print( mosaic.dtype )
 
     #Plot
     plt.figure( figsize = (12,8) )
@@ -99,7 +104,7 @@ def merge_plot( df , band , filename):
                     "transform": out_transform,
                     "crs": "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs ",
                     "dtype" : mosaic.dtype,
-                    "nodata": np.nan
+                    #"nodata": np.nan
                     }
                     )
 
@@ -113,10 +118,71 @@ for b in df['band'].unique().tolist():
     for t in temp1['date'].unique().tolist():
 
         temp2 = temp1[ temp1['date'] == t ]
-        filename = '{}_{}_Del.tiff'.format(t,b)
+        filename = '{}_{}_Can.tiff'.format(t,b)
 
         print( filename )
         merge_plot( temp2 , b , filename )
+
+
+# %% MERGE BANDS - OPEN
+
+import os
+img_path = r'D:\SAVI\Musilaj_Mapping\RasterData\2105'
+date = "20210524"
+allf = os.listdir( img_path )
+
+#Images
+allf = [i for i in allf if i.split(".")[1]=="tiff" ]
+
+#date
+allf =  [i for i in allf if date in i ]
+file_list = [os.path.join(img_path,i) for i in allf]
+file_list = [file_list[0],file_list[2],file_list[1]]
+
+file_list
+
+# %% MERGE BANDS - SAVE
+
+# Read metadata of first file
+with rasterio.open(file_list[0]) as src0:
+    meta = src0.meta
+
+# Update meta to reflect the number of layers
+meta.update(count = len(file_list))
+
+tiff_path = os.path.join(img_path,'{}_MergeR.tif'.format(date))
+# Read each layer and write it to stack
+with rasterio.open( tiff_path, 'w', **meta) as dst:
+    for id, layer in enumerate(file_list, start=1):
+        with rasterio.open(layer) as src1:
+            dst.write_band(id, src1.read(1))
+
+# %% MERGE BANDS - CLIP
+
+
+import fiona
+import rasterio.mask
+
+with fiona.open( r"D:\SAVI\Musilaj_Mapping\GIS_Data\Coast_v3.shp" , "r") as shapefile:
+    shapes = [feature["geometry"] for feature in shapefile]
+
+with rasterio.open( tiff_path ) as src:
+    out_image, out_transform = rasterio.mask.mask(src, shapes, crop=True)
+    out_meta = src.meta
+
+out_meta.update({"driver": "GTiff",
+                 #"dtype" : mosaic.dtype,
+                 "height": out_image.shape[1],
+                 "width": out_image.shape[2],
+                "crs": "+proj=utm +zone=35 +ellps=WGS84 +datum=WGS84 +units=m +no_defs ",
+                 "transform": out_transform})
+
+plt.figure( figsize = (12,8) )
+show( out_image , cmap='terrain')
+
+with rasterio.open( os.path.join(img_path,'{}_ClipR.tif'.format(date)) , "w", **out_meta) as dest:
+    dest.write(out_image)
+
 
 
 # %%
