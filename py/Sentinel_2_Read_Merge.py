@@ -13,15 +13,15 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-folder_path = r'D:\SAVI\Musilaj_Mapping\RasterData\2105'
+folder_path = r'D:\SAVI\Musilaj_Mapping\RasterData\210613'
 folder_list = os.listdir( folder_path )
 
 [i for i in folder_list]
 
 #%% Filter Some if necessary
 
-#05/14 calismamisti
-folder_list = [i for i in folder_list if not '20210514' in i]
+#Only the 17th
+folder_list = [i for i in folder_list if '20210517' in i]
 folder_list
 
 #%% Create a file list for Bands.
@@ -125,10 +125,14 @@ for b in df['band'].unique().tolist():
 
 
 # %% MERGE BANDS - OPEN
+#Go One by one by changing the date at DATE
 
 import os
-img_path = r'D:\SAVI\Musilaj_Mapping\RasterData\2105'
-date = "20210524"
+import fiona
+import rasterio.mask
+
+img_path = folder_path # Bu ayni olmayabilir. !!!
+date = "20210613" #Define a single date to process!!!!!
 allf = os.listdir( img_path )
 
 #Images
@@ -157,11 +161,8 @@ with rasterio.open( tiff_path, 'w', **meta) as dst:
         with rasterio.open(layer) as src1:
             dst.write_band(id, src1.read(1))
 
+print('Multi-band raster created!')
 # %% MERGE BANDS - CLIP
-
-
-import fiona
-import rasterio.mask
 
 with fiona.open( r"D:\SAVI\Musilaj_Mapping\GIS_Data\Coast_v3.shp" , "r") as shapefile:
     shapes = [feature["geometry"] for feature in shapefile]
@@ -183,6 +184,6 @@ show( out_image , cmap='terrain')
 with rasterio.open( os.path.join(img_path,'{}_ClipR.tif'.format(date)) , "w", **out_meta) as dest:
     dest.write(out_image)
 
-
+print("Image Transformed and Written!")
 
 # %%

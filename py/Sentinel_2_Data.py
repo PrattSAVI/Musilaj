@@ -31,32 +31,41 @@ print (footprint)
 # See overlapping geometry
 
 products = api.query(footprint,
-                     date = ('20210225', '20210525'),
+                     date = ('20210401', '20210423'),
                      platformname = 'Sentinel-2',
                      processinglevel = 'Level-2A',
-                     cloudcoverpercentage = (0, 20))
+                     cloudcoverpercentage = (0, 25))
 
 areas = api.to_geodataframe(products)
 areas['i'] = [i for i in range(len(areas))]
 
-gdf2 = gpd.read_file(boundsdata)
-
-#%% Start with some dates.
-# For May: ['05/24','05/22','05/19','05/17','05/14','05/12','05/09','05/04']
-
-#All dates on May
-dates = ['05/24','05/19','05/17','05/14','05/12','05/09']
-
 areas['date'] = pd.to_datetime( areas['generationdate'] )
 areas['date2'] = areas['date'].dt.strftime('%m/%d') #convert to month/day
 
-areas = areas[ areas['date2'].isin(dates) ].copy()
+
+gdf2 = gpd.read_file(boundsdata)
+areas[['title','date2']]
+
+#%% Start with some dates.
+
+#All dates on May, check EO Browser to note dates
+#dates = ['05/14','05/12','05/09']
+dates = ['04/22','04/07','04/07']
+
+areas = areas[ areas['date2'].isin(dates) ].copy() # Only for these days
 areas = areas[ ~areas['title'].str.contains("TTL") ] #Yamuk Projeksiyonlu
 areas = areas[ ~areas['title'].str.contains("TTK") ] #Yamuk Projeksiyonlu
 
 
 print( len(areas))
 areas[['title','date2']]
+
+#%% REMOVE THIS CELL
+#This is for removing specific tiles, if they have been downloaded
+
+#areas = areas[ areas['title'].str.contains("T35TPE") ]
+#areas
+
 
 #%% Plot all and Check
 
@@ -79,6 +88,6 @@ for i in dates:
 print( len(areas) )
 
 for i,r in areas.iterrows():
-    api.download( r['uuid'].tolist()[0] )
+    api.download( r['uuid'] )
 
 # %%
