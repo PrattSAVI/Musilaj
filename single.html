@@ -23,8 +23,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-    <meta name="twitter:card" content="summary"></meta>
-
     <style>
         body {
             margin: 0;
@@ -110,13 +108,14 @@
             border-radius: 50%;
         }
         
-        .tt {
-            text-align: center;
-            padding: 2px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            max-width: 300px;
+        #popup {
+            position: absolute;
+            max-width: 250px;
+            z-index: 10000;
+        }
+        
+        blockquote p {
+            color: gray;
         }
     </style>
 </head>
@@ -124,6 +123,9 @@
 <body>
 
     <div class="container">
+
+
+
         <div class="row">
             <div class="col-4">
 
@@ -182,6 +184,7 @@
                 </div>
             </div>
             <div class="col-8">
+                <div id='popup'></div>
                 <div id="map"></div>
             </div>
         </div>
@@ -267,22 +270,61 @@
     function generateTws(data, L) {
 
         var div_circle = L.divIcon({
-            className: 'circle'
+            className: 'circle',
         });
 
         data.forEach(function(d) {
             var marker = L.marker([d.lat, d.lon], {
                 icon: div_circle
-            }).addTo(map);
+            }).addTo(map).on('click', onClick);
 
-            //console.log(d.link);
-            //marker.bindPopup(`<div id="twitter-feed"></div><b>Hello world!</b><br>I am a popup.<br> <a target="_blank" href= ${d.link}>Twit Link</a>`);
-            marker.bindPopup(`<div class="tt"><blockquote class="twitter-tweet"><p lang="tr" dir="ltr">Burası Salda Gölü’nün kumsalı değil, Erdek Denizi…!<a href="https://twitter.com/hashtag/MarmaraDenizi%C3%96l%C3%BCyor?src=hash&amp;ref_src=twsrc%5Etfw">#MarmaraDeniziÖlüyor</a> <a href="https://t.co/fonQoSOlp3">pic.twitter.com/fonQoSOlp3</a></p>&mdash; Tayfun Gezmiş (@tayfungezmis) <a href="https://twitter.com/tayfungezmis/status/1403065818645073922?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script>'</div>`);
-            //marker.bindPopup(`<blockquote class="twitter-tweet" data-dnt="true"><p lang="tr" dir="ltr">Marmara Denizi açıklarında seyir halindeyiz. Durum içler acısı, takdiri sizlere bırakıyorum. <a href="https://t.co/yJHr1UdX1x">pic.twitter.com/yJHr1UdX1x</a></p>&mdash; Kadircan Kosdere (@KKosdere) <a href="https://twitter.com/KKosdere/status/1402910422215401473?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `);
+
+            //marker.bindPopup();
         });
     };
 
+    function inserthtml(id, text) {
+        document.getElementById(id).innerHTML = text;
+        var scripts = Array.prototype.slice.call(document.getElementById(id).getElementsByTagName("script"));
+        for (var i = 0; i < scripts.length; i++) {
+            if (scripts[i].src != "") {
+                var tag = document.createElement("script");
+                tag.src = scripts[i].src;
+                document.getElementsByTagName("head")[0].appendChild(tag);
+                console.log("ust")
+            } else {
+                console.log('alt')
+                eval(scripts[i].innerHTML);
+            }
+        }
+    }
 
+    function onClick() {
+        //var x = event.pageX / window.innerHeight;
+        //var y = event.pageY / window.innerWidth;
+
+        //console.log([x, y]);
+        mousePosition = {
+            x: event.clientX,
+            y: event.clientY
+        }
+        console.log([mousePosition.x, mousePosition.y]);
+
+        var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
+        var text = `<blockquote class="twitter-tweet" data-dnt="true"><p lang="tr" dir="ltr">Marmara Denizi açıklarında seyir halindeyiz. Durum içler acısı, takdiri sizlere bırakıyorum. <a href="https://t.co/yJHr1UdX1x">pic.twitter.com/yJHr1UdX1x</a></p>&mdash; Kadircan Kosdere (@KKosdere) <a href="https://twitter.com/KKosdere/status/1402910422215401473?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote> ${code}`;
+
+        inserthtml('popup', text);
+
+        var popup = document.getElementById('popup');
+        //popup.innerHTML = `<p>Here is some text</p>`;
+
+        var posx = mousePosition.x - popup.offsetLeft - (document.getElementById('map').clientWidth / 2);
+        var posy = mousePosition.y - popup.offsetTop;
+
+        console.log([posx, posy]);
+        popup.style.transform = `translate(${posx}px,${posy}px)`;
+
+    }
 
     let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson';
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
@@ -320,6 +362,7 @@
             let selected_date = $(this).val();
             geoJsonLayer = generatePolygon(selected_date, L);
         });
+
 
 
 
