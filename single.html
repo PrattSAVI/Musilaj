@@ -194,21 +194,27 @@
     }
 
     // Polygons
-    function generatePolygon(data, date, L) {
+    function generatePolygon(date, L) {
 
-        $(".leaflet-interactive").remove();
+        $("#feature").remove();
 
-        let filtered = data.features.filter(function(f) {
-            return f.properties.date == date;
+        api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
+        console.log(api_path)
+
+        //Open 
+        $.getJSON(api_path, function(data) {
+            let geoJsonLayer = L.geoJSON(data, {
+                style: style,
+            }).addTo(map);
+
+            //assign id = feature to polygons
+            geoJsonLayer.eachLayer(function(layer) {
+                layer._path.id = 'feature';
+            });
+
+            return geoJsonLayer;
         });
-
-        let geoJsonLayer = L.geoJSON(filtered, {
-            style: style,
-        }).addTo(map);
-
-        return geoJsonLayer;
-
-    }
+    };
 
     // Points
     function generatePts(data, L) {
@@ -241,24 +247,30 @@
         })
 
     }
-    //let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/20210617_data_mini.geojson'
-    let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson'
+
+    let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson';
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
+    let all_dates = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.txt';
 
-    let apis = 'https://prattsavi.github.io/Musilaj/apis/'
-        // ------------------- WORK WITH DATA STARTS HERE--------------------------
+    // ------------------- WORK WITH DATA STARTS HERE--------------------------
 
-    // Polygons
-    $.getJSON(path, function(data) { // Polygons
+    // Get all dates
+    $.get(all_dates, function(data) {
+        unique_dates = data.split(",");
+
+        //Insert  dates into dropdown
+        unique_dates.forEach(function(d, i) {
+            $('#date-selector').append(`<option value="${d}">${d}</option>`);
+            $("#date-selector").prop("selectedIndex", unique_dates.length - 1); // Select first
+        });
 
         //// Desarj Noktalari Add as Geojson Layer
         $.getJSON(noktalar, function(pts) {
             generatePts(pts, L);
         });
 
-
         //Create Initial  polygon
-        geoJsonLayer = generatePolygon(data, unique_dates[0], L);
+        geoJsonLayer = generatePolygon(unique_dates[unique_dates.length - 1], L);
 
         // Zoom Based Styling
         map.on('zoomend', function() {
@@ -288,10 +300,8 @@
         // Create the filter -> Filter data based on dropdown.
         $('#date-selector').change(function() {
             let selected_date = $(this).val();
-            geoJsonLayer = generatePolygon(data, selected_date, L);
+            geoJsonLayer = generatePolygon(selected_date, L);
         });
-
-
 
         // Twitter starts here
         $.getJSON(twit_path, function(twit) {
