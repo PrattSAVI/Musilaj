@@ -237,7 +237,7 @@
 
     let path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/20210617_data_all.geojson'
     let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson'
-    let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.csv';
+    let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
 
     // ------------------- WORK WITH DATA STARTS HERE--------------------------
 
@@ -306,8 +306,8 @@
     });
 
     // Twitter starts here
-    $.get(twit_path, function(response) {
-        datat = $.csv.toArrays(response);
-        console.log(datat)
+    $.getJSON(twit_path, function(twit) {
+
+        console.log(twit)
     })
 </script>
