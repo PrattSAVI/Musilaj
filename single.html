@@ -21,6 +21,9 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+    <meta name="twitter:card" content="summary"></meta>
 
     <style>
         body {
@@ -93,6 +96,28 @@
         select {
             width: 100%;
         }
+        
+         :root {
+            --circle-radius: 6px;
+        }
+        
+        .circle {
+            width: var(--circle-radius) !important;
+            height: var(--circle-radius) !important;
+            margin-left: ((var(--circle-radius)/2)*-1) !important;
+            margin-top: ((var(--circle-radius)/2)*-1) !important;
+            background: magenta;
+            border-radius: 50%;
+        }
+        
+        .tt {
+            text-align: center;
+            padding: 2px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            max-width: 300px;
+        }
     </style>
 </head>
 
@@ -115,7 +140,6 @@
                             </select>
                         </form>
                     </div>
-
 
                     <p>
                         Yandaki interaktif harita, son günlerin sıkça tartışılan konularından biri olan Marmara Denizi'ndeki deniz müsilajının güncel yayılımını göstermektedir.
@@ -196,6 +220,7 @@
     // Polygons
     function generatePolygon(date, L) {
 
+        //Remove existing polygons if there are any
         $("#feature").remove();
 
         api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
@@ -241,12 +266,23 @@
     // Generate Tweeter
     function generateTws(data, L) {
 
-        data.forEach(function(d) {
-            console.log(d);
-            L.circleMarker([d.lat, d.lon]).addTo(map)
-        })
+        var div_circle = L.divIcon({
+            className: 'circle'
+        });
 
-    }
+        data.forEach(function(d) {
+            var marker = L.marker([d.lat, d.lon], {
+                icon: div_circle
+            }).addTo(map);
+
+            //console.log(d.link);
+            //marker.bindPopup(`<div id="twitter-feed"></div><b>Hello world!</b><br>I am a popup.<br> <a target="_blank" href= ${d.link}>Twit Link</a>`);
+            marker.bindPopup(`<div class="tt"><blockquote class="twitter-tweet"><p lang="tr" dir="ltr">Burası Salda Gölü’nün kumsalı değil, Erdek Denizi…!<a href="https://twitter.com/hashtag/MarmaraDenizi%C3%96l%C3%BCyor?src=hash&amp;ref_src=twsrc%5Etfw">#MarmaraDeniziÖlüyor</a> <a href="https://t.co/fonQoSOlp3">pic.twitter.com/fonQoSOlp3</a></p>&mdash; Tayfun Gezmiş (@tayfungezmis) <a href="https://twitter.com/tayfungezmis/status/1403065818645073922?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script>'</div>`);
+            //marker.bindPopup(`<blockquote class="twitter-tweet" data-dnt="true"><p lang="tr" dir="ltr">Marmara Denizi açıklarında seyir halindeyiz. Durum içler acısı, takdiri sizlere bırakıyorum. <a href="https://t.co/yJHr1UdX1x">pic.twitter.com/yJHr1UdX1x</a></p>&mdash; Kadircan Kosdere (@KKosdere) <a href="https://twitter.com/KKosdere/status/1402910422215401473?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `);
+        });
+    };
+
+
 
     let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson';
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
@@ -272,28 +308,10 @@
         //Create Initial  polygon
         geoJsonLayer = generatePolygon(unique_dates[unique_dates.length - 1], L);
 
-        // Zoom Based Styling
-        map.on('zoomend', function() {
-
-            let zl = map.getZoom();
-
-            if (zl <= 10) {
-                geoJsonLayer.setStyle({
-                    weight: 0.15
-                })
-            } else if (zl => 13) {
-                geoJsonLayer.setStyle({
-                    weight: 1
-                })
-            } else if (zl === 8) {
-                geoJsonLayer.setStyle({
-                    weight: 0.05
-                })
-            } else {
-                geoJsonLayer.setStyle({
-                    weight: 0.4
-                })
-            }
+        // Twitter starts here
+        $.getJSON(twit_path, function(twit) {
+            //console.log(twit);
+            generateTws(twit, L);
 
         });
 
@@ -303,12 +321,7 @@
             geoJsonLayer = generatePolygon(selected_date, L);
         });
 
-        // Twitter starts here
-        $.getJSON(twit_path, function(twit) {
-            //console.log(twit);
-            generateTws(twit, L);
 
-        })
 
 
     });
