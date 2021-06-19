@@ -222,26 +222,22 @@
 
     // Polygons
     function generatePolygon(date, L) {
-
-        //Remove existing polygons if there are any
-        $("#feature").remove();
-
         api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
-        console.log(api_path)
 
         //Open 
-        $.getJSON(api_path, function(data) {
+        let geoJsonLayer = $.getJSON(api_path, function(data) {
+
             let geoJsonLayer = L.geoJSON(data, {
                 style: style,
             }).addTo(map);
 
             //assign id = feature to polygons
             geoJsonLayer.eachLayer(function(layer) {
-                layer._path.id = 'feature';
+                layer._path.id = 'feature-select';
             });
-
             return geoJsonLayer;
         });
+        return geoJsonLayer;
     };
 
     // Points
@@ -350,24 +346,26 @@
         });
 
         //Create Initial  polygon
-        geoJsonLayer = generatePolygon(unique_dates[unique_dates.length - 1], L);
+        let sdate = unique_dates[unique_dates.length - 1];
+        let geoJsonLayer = generatePolygon(sdate, L);
 
         // Twitter starts here
         $.getJSON(twit_path, function(twit) {
             //console.log(twit);
             generateTws(twit, L);
-
         });
 
         // Create the filter -> Filter data based on dropdown.
         $('#date-selector').change(function() {
-            let selected_date = $(this).val();
-            geoJsonLayer = generatePolygon(selected_date, L);
+
+            $("#feature-select").remove();
+            var feats = document.getElementById('feature-select')
+            if (feats != null) {
+                console.log(feats)
+                feats.remove();
+            }
+            geoJsonLayer = generatePolygon($(this).val(), L);
         });
-
-
-
-
 
     });
 </script>
