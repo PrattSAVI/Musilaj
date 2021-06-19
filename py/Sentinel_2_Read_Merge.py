@@ -13,16 +13,10 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-folder_path = r'D:\SAVI\Musilaj_Mapping\RasterData\210613'
+folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\210402"
 folder_list = os.listdir( folder_path )
 
 [i for i in folder_list]
-
-#%% Filter Some if necessary
-
-#Only the 17th
-folder_list = [i for i in folder_list if '20210517' in i]
-folder_list
 
 #%% Create a file list for Bands.
 # Creates a DF to use for merging
@@ -64,7 +58,6 @@ df
 
 import matplotlib.pyplot as plt
 import numpy as np
-import rasterio
 from rasterio.merge import merge
 from rasterio.plot import show
 
@@ -123,6 +116,7 @@ for b in df['band'].unique().tolist():
         print( filename )
         merge_plot( temp2 , b , filename )
 
+print("Done! Here are the bands")
 
 # %% MERGE BANDS - OPEN
 #Go One by one by changing the date at DATE
@@ -132,7 +126,7 @@ import fiona
 import rasterio.mask
 
 img_path = folder_path # Bu ayni olmayabilir. !!!
-date = "20210613" #Define a single date to process!!!!!
+date = "20210402" #Define a single date to process!!!!!
 allf = os.listdir( img_path )
 
 #Images

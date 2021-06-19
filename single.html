@@ -273,13 +273,12 @@
             className: 'circle',
         });
 
-        data.forEach(function(d) {
+        data.forEach(function(d, i) {
             var marker = L.marker([d.lat, d.lon], {
-                icon: div_circle
+                icon: div_circle,
+                title: d.embed,
             }).addTo(map).on('click', onClick);
 
-
-            //marker.bindPopup();
         });
     };
 
@@ -300,23 +299,26 @@
     }
 
     function onClick() {
-        //var x = event.pageX / window.innerHeight;
-        //var y = event.pageY / window.innerWidth;
 
-        //console.log([x, y]);
+        let obj = $(this)[0]._icon.attributes.title.nodeValue;
+        console.log(obj);
+
+        let tw_embed = obj
+        tw_embed = tw_embed.split('<script')[0];
+
+        var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
+        var text = tw_embed + code;
+
+        inserthtml('popup', text);
+
+        var popup = document.getElementById('popup');
+
         mousePosition = {
             x: event.clientX,
             y: event.clientY
         }
         console.log([mousePosition.x, mousePosition.y]);
 
-        var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
-        var text = `<blockquote class="twitter-tweet" data-dnt="true"><p lang="tr" dir="ltr">Marmara Denizi açıklarında seyir halindeyiz. Durum içler acısı, takdiri sizlere bırakıyorum. <a href="https://t.co/yJHr1UdX1x">pic.twitter.com/yJHr1UdX1x</a></p>&mdash; Kadircan Kosdere (@KKosdere) <a href="https://twitter.com/KKosdere/status/1402910422215401473?ref_src=twsrc%5Etfw">June 10, 2021</a></blockquote> ${code}`;
-
-        inserthtml('popup', text);
-
-        var popup = document.getElementById('popup');
-        //popup.innerHTML = `<p>Here is some text</p>`;
 
         var posx = mousePosition.x - popup.offsetLeft - (document.getElementById('map').clientWidth / 2);
         var posy = mousePosition.y - popup.offsetTop;
@@ -355,7 +357,6 @@
 
         // Twitter starts here
         $.getJSON(twit_path, function(twit) {
-            //console.log(twit);
             generateTws(twit, L);
         });
 
