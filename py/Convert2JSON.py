@@ -14,15 +14,24 @@ a=[]
 for i,r in df.iterrows():
     print( r['link'] )
 
+    params = {
+        'omit_script': '1',
+        'maxheight':300,
+        'limit':1
+
+        }
+
     links = 'https://publish.twitter.com/oembed?url={}'.format(r['link'])
-    resp = requests.get( links )
+    resp = requests.get( links , params=params )
     data = resp.json()
-    #print(data['html'])
+    print(data['html'])
     a.append( data['html'] )
 
-df['embed'] = a
+    break
 
-df
+#df['embed'] = a
+
+#df
 
 # %%
 

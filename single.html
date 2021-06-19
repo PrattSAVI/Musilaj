@@ -104,13 +104,14 @@
             height: var(--circle-radius) !important;
             margin-left: ((var(--circle-radius)/2)*-1) !important;
             margin-top: ((var(--circle-radius)/2)*-1) !important;
-            background: magenta;
+            background: #00a8c4;
             border-radius: 50%;
         }
         
         #popup {
             position: absolute;
             max-width: 200px;
+            max-height: 300px;
             z-index: 10000;
         }
         
@@ -285,6 +286,7 @@
     function inserthtml(id, text) {
         document.getElementById(id).innerHTML = text;
         var scripts = Array.prototype.slice.call(document.getElementById(id).getElementsByTagName("script"));
+        console.log(scripts);
         for (var i = 0; i < scripts.length; i++) {
             if (scripts[i].src != "") {
                 var tag = document.createElement("script");
@@ -304,7 +306,7 @@
         console.log(obj);
 
         let tw_embed = obj
-        tw_embed = tw_embed.split('<script')[0];
+            //tw_embed = tw_embed.split('<script')[0];
 
         var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
         var text = tw_embed + code;
@@ -312,6 +314,7 @@
         inserthtml('popup', text);
 
         var popup = document.getElementById('popup');
+        popup.style.opacity = 1;
 
         mousePosition = {
             x: event.clientX,
@@ -327,6 +330,7 @@
 
         console.log([posx, posy]);
         popup.style.transform = `translate(${posx}px,${posy}px)`;
+        popup.style.opacity = 1;
 
     }
 
@@ -374,6 +378,16 @@
 
             //Generate Polygon with new dates
             geoJsonLayer = generatePolygon($(this).val(), L);
+        });
+
+        $('#map').mousedown(function() {
+
+            console.log('Map clicked');
+            let popup = document.getElementById('popup')
+            popup.innerHTML = '';
+            popup.style.opacity = 0;
+
+
         });
 
     });
