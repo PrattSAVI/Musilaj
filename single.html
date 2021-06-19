@@ -110,7 +110,7 @@
         
         #popup {
             position: absolute;
-            max-width: 250px;
+            max-width: 200px;
             z-index: 10000;
         }
         
@@ -320,6 +320,8 @@
 
         var posx = mousePosition.x - popup.offsetLeft - (document.getElementById('map').clientWidth / 2);
         var posy = mousePosition.y - popup.offsetTop;
+
+        console.log(posy + popup.clientHeight)
 
         console.log([posx, posy]);
         popup.style.transform = `translate(${posx}px,${posy}px)`;
