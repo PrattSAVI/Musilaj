@@ -241,6 +241,10 @@
     };
 
     // Points
+    function del_all() {
+        $("#feature-select").remove()
+    };
+
     function generatePts(data, L) {
 
         var geojsonMarkerOptions = {
@@ -358,12 +362,16 @@
         // Create the filter -> Filter data based on dropdown.
         $('#date-selector').change(function() {
 
-            $("#feature-select").remove();
+            //Delete all feature-select's
+            del_all()
+
+            //If that fails, delete all paths. 
             var feats = document.getElementById('feature-select')
             if (feats != null) {
-                console.log(feats)
-                feats.remove();
+                $('path').remove()
             }
+
+            //Generate Polygon with new dates
             geoJsonLayer = generatePolygon($(this).val(), L);
         });
 
