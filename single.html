@@ -12,7 +12,6 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdn.rawgit.com/JDMcKinstry/JavaScriptDateFormat/master/Date.format.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css" />
@@ -21,18 +20,23 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;700&display=swap" rel="stylesheet">
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 50%;
             background-color: #212529;
+            font-family: 'Raleway', sans-serif;
+            font-weight: 500;
+            height: 100%;
+            max-height: 100%;
         }
         
         p {
             color: #efefef
+        }
+        
+        .row {
+            display: flex;
+            min-height: 100vh;
         }
         
         .container {
@@ -43,14 +47,9 @@
             max-height: 100%;
         }
         
-        body {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 500;
-        }
-        
         #map {
-            width: 100%;
             height: 100%;
+            min-height: 500px;
         }
         
         #intro {
@@ -66,22 +65,21 @@
             font-size: 11px;
         }
         
+         :root {
+            --circle-radius: 5px;
+            --myyellow: #ffe000;
+        }
+        
         #title {
-            color: #ffe000;
+            color: var(--myyellow);
             font-family: 'Raleway', sans-serif;
             margin-top: 15px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
         }
         
         a {
-            color: #ffe000;
-        }
-        
-        img {
-            margin-left: 0px;
-            margin-right: 15px;
-            width: 100%;
+            color: var(--myyellow);
         }
         
         #controllers {
@@ -95,55 +93,46 @@
             width: 100%;
         }
         
-         :root {
-            --circle-radius: 6px;
-        }
-        
         .circle {
             width: var(--circle-radius) !important;
             height: var(--circle-radius) !important;
             margin-left: ((var(--circle-radius)/2)*-1) !important;
             margin-top: ((var(--circle-radius)/2)*-1) !important;
-            background: #00a8c4;
+            background: #00a8c492;
             border-radius: 50%;
         }
         
-        #popup {
-            position: absolute;
-            max-width: 200px;
-            max-height: 300px;
-            z-index: 10000;
+        .twitter-tweet {
+            max-height: 200px !important;
+            max-width: 650px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-padding-right: 10px;
         }
         
-        blockquote p {
-            color: gray;
+        .leaflet-popup-content {
+            margin: "5px 5px 5px 5px !important"
         }
     </style>
 </head>
 
 <body>
-
-    <div class="container">
-
-
-
-        <div class="row">
-            <div class="col-4">
+    <div class="container-fluid h-100 overflow-auto">
+        <div class="row h-100 overflow-auto">
+            <div class="col-md-4 col-xs-12 pl-0 pr-0">
 
                 <div id="intro">
 
-
-                    <p id="title"><b>MARMARA MÜSİLAJ HARİTASI</b></p>
-
                     <!-- Control ve dropdown -->
                     <div id='controllers'>
-                        <p>Goruntuleme yapmak istediginiz tarihi secin</p>
+                        <p>Görüntüleme yapmak istediğiniz tarihi seçin</p>
                         <form>
-                            <select name="dropdown" id='date-selector'>
-                            </select>
+                            <select name="dropdown" id='date-selector'> </select>
                         </form>
                     </div>
 
+
+                    <p id="title"><b>MARMARA MÜSİLAJ HARİTASI</b></p>
                     <p>
                         Yandaki interaktif harita, son günlerin sıkça tartışılan konularından biri olan Marmara Denizi'ndeki deniz müsilajının güncel yayılımını göstermektedir.
                         <br><br> Müsilaj oluşumu, Akdeniz'de ilk defa 1729 yılında belgelenmiş, özellikle geçtiğimiz 30 yılda artan sıklıklarda gözlenmeye devam etmiştir <sup>[1]</sup>. Marmara Denizi'nde ise en belirgin müsilaj oluşumu 2007 yılında görülmüştür.
@@ -157,10 +146,6 @@
                         <br><br>Yeterli oranda arıtılmadan denize boşaltılan atık su, her ne kadar derinden deşarj edilse de, yılların birikimi ile bu atığın etkisi yüzeyde de kendini göstermeye başlıyor. Marmara Denizi'nin dip akıntısı kuzeye, Karadeniz'e
                         doğru. Fakat yüzey akıntısı ters yönde: aşağıdaki gördüğünüz oklar, yüzey akıntısının basitleştirilmiş bir şeması <sup>[5]</sup>. Bu yüzey akıntısı deseni ve bilinen deşarj noktaları birlikte düşünüldüğünde, mevcut müsilaj dağılımı
                         anlamlı hale geliyor, ve yakın gelecekte ne şekilde yayılmaya devam edeceğine dair ip uçları veriyor.
-                    </p>
-
-                    <img src="https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/BogazAkinti_Koyu.jpg"></img>
-                    <p>
                         <br><br>Bu çalışma, bir süredir çeşitli uzmanın yaptıkları açıklamaları harita üzerinde görselleştirmek amacıyla hazırlandı. Eğer veride veya metinde herhangi bir hata olduğunu düşünüyorsanız bize info@bitsnbricks.com adresinden
                         ulaşabilir, eklemek istediklerinizi <a href="https://twitter.com/search?q=%23musilajharitasi&src=typed_query">#musilajharitasi</a> ile twitter'dan paylaşabilirsiniz!
                         <br><br> Müsilaj verisi Sentinel-2 uydusunun 23 Mayıs ile 8 Haziran tarihleri arasında okumları birleştirilerek elde edilmiştir. Uydu görüntülerinin 4,8a ve 11 bantları kompozitleştirilerek, gözetimli bir makina öğrenmesi algoritması
@@ -184,8 +169,7 @@
 
                 </div>
             </div>
-            <div class="col-8">
-                <div id='popup'></div>
+            <div class="col-md-8 col-xs-12 pl-0 pr-0">
                 <div id="map"></div>
             </div>
         </div>
@@ -196,8 +180,19 @@
 
 <script>
     // ---  LEAFLET Basemap Tiles
-    //40.70197835318973, 28.28485189674848
     var map = L.map('map').setView([40.7019, 28.2848], 9);
+
+    //This is for executing <script> tag in the twitter embed HTML code.
+    // I am generating the Script tag since it repeats. 
+    map.on('popupopen', function() {
+
+        var tag = document.createElement("script");
+        tag.src = "https://platform.twitter.com/widgets.js";
+        tag.charset = "utf-8"
+
+        document.getElementsByTagName("head")[0].appendChild(tag);
+    });
+
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: '© <a href="https://www.mapbox.com/about/maps/" style="color:#ffe000">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright"  style="color:#ffe000">OpenStreetMap</a> <strong><a  style="color:#ffe000" href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
@@ -208,7 +203,6 @@
         id: 'mapbox/dark-v10',
         accessToken: 'pk.eyJ1IjoiY2Fua2FkaXIiLCJhIjoiY2pteXplNnEzMHF3YTNrcGx0dGd4MmJrdiJ9.zbhQ39YIdfZufTljuTSl1w'
     }).addTo(map);
-
 
     // Style Object for the general Polygon Styline
     function style(data) {
@@ -275,66 +269,26 @@
         });
 
         data.forEach(function(d, i) {
+
+            var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
+            var popup_content = d.embed; // + code;
+
+            //console.log(popup_content)
+
+            var customOptions = {
+                'maxWidth': '300',
+            }
+
             var marker = L.marker([d.lat, d.lon], {
                 icon: div_circle,
-                title: d.embed,
-            }).addTo(map).on('click', onClick);
+            }).addTo(map);
+
+            marker.bindPopup(popup_content);
 
         });
     };
 
-    function inserthtml(id, text) {
-        document.getElementById(id).innerHTML = text;
-        var scripts = Array.prototype.slice.call(document.getElementById(id).getElementsByTagName("script"));
-        console.log(scripts);
-        for (var i = 0; i < scripts.length; i++) {
-            if (scripts[i].src != "") {
-                var tag = document.createElement("script");
-                tag.src = scripts[i].src;
-                document.getElementsByTagName("head")[0].appendChild(tag);
-                console.log("ust")
-            } else {
-                console.log('alt')
-                eval(scripts[i].innerHTML);
-            }
-        }
-    }
 
-    function onClick() {
-
-        let obj = $(this)[0]._icon.attributes.title.nodeValue;
-        console.log(obj);
-
-        let tw_embed = obj
-            //tw_embed = tw_embed.split('<script')[0];
-
-        var code = `<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><` + `/script> `;
-        var text = tw_embed + code;
-
-        inserthtml('popup', text);
-
-        var popup = document.getElementById('popup');
-        popup.style.opacity = 1;
-
-        mousePosition = {
-            x: event.clientX,
-            y: event.clientY
-        }
-        console.log([mousePosition.x, mousePosition.y]);
-
-
-        var posx = mousePosition.x - popup.offsetLeft - (document.getElementById('map').clientWidth / 2);
-        var posy = mousePosition.y - popup.offsetTop;
-
-        console.log(posy + popup.clientHeight)
-
-        console.log([posx, posy]);
-        popup.style.transform = `translate(${posx}px,${posy}px)`;
-        popup.style.opacity = 1;
-
-    }
-
-    let noktalar = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/Desarj_points.geojson';
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
     let all_dates = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.txt';
 
@@ -348,11 +302,6 @@
         unique_dates.forEach(function(d, i) {
             $('#date-selector').append(`<option value="${d}">${d}</option>`);
             $("#date-selector").prop("selectedIndex", unique_dates.length - 1); // Select first
-        });
-
-        //// Desarj Noktalari Add as Geojson Layer
-        $.getJSON(noktalar, function(pts) {
-            generatePts(pts, L);
         });
 
         //Create Initial  polygon
@@ -380,15 +329,6 @@
             geoJsonLayer = generatePolygon($(this).val(), L);
         });
 
-        $('#map').mousedown(function() {
-
-            console.log('Map clicked');
-            let popup = document.getElementById('popup')
-            popup.innerHTML = '';
-            popup.style.opacity = 0;
-
-
-        });
 
     });
 </script>
