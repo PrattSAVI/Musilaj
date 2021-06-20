@@ -215,6 +215,17 @@
         };
     }
 
+    // Style Object for the Mask Style
+    function style_mask() {
+        return {
+            fillColor: 'white', // Here is the categorical coloring.
+            color: '#ffffff',
+            weight: 0.05,
+            opacity: 1,
+            fillOpacity: 0.25
+        };
+    }
+
     // Polygons
     function generatePolygon(date, L) {
         api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
@@ -238,6 +249,7 @@
     // Points
     function del_all() {
         $("#feature-select").remove()
+        $("#mask-select").remove()
     };
 
     function generatePts(data, L) {
@@ -294,14 +306,19 @@
         //console.log(data)
 
         let geoJsonLayer = L.geoJSON(data, {
-            style: style,
+            style: style_mask,
         }).addTo(map);
+
+        //assign id = feature to polygons
+        geoJsonLayer.eachLayer(function(layer) {
+            layer._path.id = 'mask-select';
+        });
 
     }
 
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
     let all_dates = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.txt';
-    let mask_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/mask_2.geojson'
+    let mask_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/mask_3.geojson'
     let date_pos = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.json';
 
     // ------------------- WORK WITH DATA STARTS HERE--------------------------
@@ -349,7 +366,12 @@
                 }
 
                 //Generate Polygon with new dates
-                geoJsonLayer = generatePolygon($(this).val(), L);
+                this_date = $(this).val();
+                geoJsonLayer = generatePolygon(this_date, L);
+
+                let pos = data.filter(d => d.date == this_date)[0].pos;
+                maskLayer(mask, pos, L);
+
             });
         });
     })
