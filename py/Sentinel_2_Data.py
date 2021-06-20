@@ -20,7 +20,7 @@ from sentinelsat import geojson_to_wkt
 from sentinelsat import read_geojson
 
 user = 'cansucuoglu'
-password = 'exploited_123' #sifre_123
+password = '' #sifre_123
 
 api = SentinelAPI(user, password, 'https://scihub.copernicus.eu/dhus')
 footprint = geojson_to_wkt(read_geojson(boundsdata))
