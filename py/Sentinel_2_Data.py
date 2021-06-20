@@ -20,7 +20,7 @@ from sentinelsat import geojson_to_wkt
 from sentinelsat import read_geojson
 
 user = 'cansucuoglu'
-password = '' #sifre_123
+password = 'exploited_123' #sifre_123
 
 api = SentinelAPI(user, password, 'https://scihub.copernicus.eu/dhus')
 footprint = geojson_to_wkt(read_geojson(boundsdata))
@@ -31,10 +31,10 @@ print (footprint)
 # See overlapping geometry
 
 products = api.query(footprint,
-                     date = ('20210401', '20210423'),
+                     date = ('20210617', '20210619'),
                      platformname = 'Sentinel-2',
                      processinglevel = 'Level-2A',
-                     cloudcoverpercentage = (0, 25))
+                     cloudcoverpercentage = (0, 90))
 
 areas = api.to_geodataframe(products)
 areas['i'] = [i for i in range(len(areas))]
@@ -50,7 +50,7 @@ areas[['title','date2']]
 
 #All dates on May, check EO Browser to note dates
 #dates = ['05/14','05/12','05/09']
-dates = ['04/22','04/07','04/07']
+dates = ['06/18']
 
 areas = areas[ areas['date2'].isin(dates) ].copy() # Only for these days
 areas = areas[ ~areas['title'].str.contains("TTL") ] #Yamuk Projeksiyonlu
@@ -63,8 +63,9 @@ areas[['title','date2']]
 #%% REMOVE THIS CELL
 #This is for removing specific tiles, if they have been downloaded
 
-#areas = areas[ areas['title'].str.contains("T35TPE") ]
-#areas
+areas = areas[ areas['title'].str.contains("T35TNE|T35TNF") ]
+
+areas
 
 
 #%% Plot all and Check
@@ -88,6 +89,9 @@ for i in dates:
 print( len(areas) )
 
 for i,r in areas.iterrows():
-    api.download( r['uuid'] )
+    try:
+        api.download( r['uuid'] )
+    except:
+        print( r['uuid'] )
 
 # %%
