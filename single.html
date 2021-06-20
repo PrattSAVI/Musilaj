@@ -288,47 +288,69 @@
         });
     };
 
+    function maskLayer(mask, pos, L) {
+
+        data = mask.features.filter(d => d.properties.taraf != pos);
+        //console.log(data)
+
+        let geoJsonLayer = L.geoJSON(data, {
+            style: style,
+        }).addTo(map);
+
+    }
 
     let twit_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/tw/Tweets.json';
     let all_dates = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.txt';
+    let mask_path = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/Data/mask_2.geojson'
+    let date_pos = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main/apis/dates.json';
 
     // ------------------- WORK WITH DATA STARTS HERE--------------------------
 
     // Get all dates
-    $.get(all_dates, function(data) {
-        unique_dates = data.split(",");
 
-        //Insert  dates into dropdown
-        unique_dates.forEach(function(d, i) {
-            $('#date-selector').append(`<option value="${d}">${d}</option>`);
-            $("#date-selector").prop("selectedIndex", unique_dates.length - 1); // Select first
+    let dates;
+    $.getJSON(date_pos, function(data) {
+        $.getJSON(mask_path, function(mask) {
+            //extract unique dates from the json file
+            let dates = data.map(({
+                date: value
+            }) => value);
+
+            //Insert  dates into dropdown
+            dates.forEach(function(d, i) {
+                $('#date-selector').append(`<option value="${d}">${d}</option>`);
+                $("#date-selector").prop("selectedIndex", dates.length - 1); // Select first
+            });
+
+            //Create Initial  polygon
+            let sdate = dates[dates.length - 1];
+            let geoJsonLayer = generatePolygon(sdate, L);
+
+            //Initial Mask
+            let pos = data.filter(d => d.date == sdate)[0].pos;
+            maskLayer(mask, pos, L);
+
+
+            // Twitter starts here
+            $.getJSON(twit_path, function(twit) {
+                generateTws(twit, L);
+            });
+
+            // Create the filter -> Filter data based on dropdown.
+            $('#date-selector').change(function() {
+
+                //Delete all feature-select's
+                del_all()
+
+                //If that fails, delete all paths. 
+                var feats = document.getElementById('feature-select')
+                if (feats != null) {
+                    $('path').remove()
+                }
+
+                //Generate Polygon with new dates
+                geoJsonLayer = generatePolygon($(this).val(), L);
+            });
         });
-
-        //Create Initial  polygon
-        let sdate = unique_dates[unique_dates.length - 1];
-        let geoJsonLayer = generatePolygon(sdate, L);
-
-        // Twitter starts here
-        $.getJSON(twit_path, function(twit) {
-            generateTws(twit, L);
-        });
-
-        // Create the filter -> Filter data based on dropdown.
-        $('#date-selector').change(function() {
-
-            //Delete all feature-select's
-            del_all()
-
-            //If that fails, delete all paths. 
-            var feats = document.getElementById('feature-select')
-            if (feats != null) {
-                $('path').remove()
-            }
-
-            //Generate Polygon with new dates
-            geoJsonLayer = generatePolygon($(this).val(), L);
-        });
-
-
-    });
+    })
 </script>
