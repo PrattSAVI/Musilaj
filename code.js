@@ -48,8 +48,7 @@ function style_mask() {
 // Polygons
 function generatePolygon(date, L) {
 
-    //api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
-    api_path = `/apis/${date}.geojson`
+    api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
 
     //Open 
     let geoJsonLayer = $.getJSON(api_path, function(data) {
@@ -107,15 +106,12 @@ function maskLayer(mask, pos, L) {
     });
 }
 
-//let twit_path = `${github}/Data/tw/Tweets.json`;
-//let github = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main';
-//let mask_path = `${github}/Data/mask_3.geojson`;
-//let date_pos = `${github}/apis/dates.json`;
+let github = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main';
 
+let twit_path = `${github}/Data/tw/Tweets.json`;
+let mask_path = `${github}/Data/mask_3.geojson`;
+let date_pos = `${github}/apis/dates.json`;
 
-let twit_path = `/Data/tw/Tweets.json`;
-let mask_path = `/Data/mask_3.geojson`;
-let date_pos = `/apis/dates.json`;
 
 // ------------------- WORK WITH DATA STARTS HERE--------------------------
 
