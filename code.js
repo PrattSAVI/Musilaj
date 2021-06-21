@@ -1,7 +1,6 @@
 // ---  LEAFLET Basemap Tiles
 var map = L.map('map', {
-    dragging: !L.Browser.mobile,
-    tap: !L.Browser.mobile
+    gestureHandling: true
 }).setView([40.7019, 28.2848], 9);
 
 //This is for executing <script> tag in the twitter embed HTML code.
