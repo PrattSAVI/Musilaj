@@ -41,7 +41,7 @@ function style_mask() {
         color: '#ffffff',
         weight: 0.05,
         opacity: 1,
-        fillOpacity: 0.25
+        fillOpacity: 0.5
     };
 }
 

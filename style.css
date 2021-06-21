@@ -12,15 +12,14 @@ p {
 
 .row {
     display: flex;
+}
+
+.container-fluid {
     min-height: 100vh;
 }
 
-.container {
-    width: 100%;
-    height: 100%;
-    margin: 0 0 0 0;
-    max-width: 100%;
-    max-height: 100%;
+#main {
+    min-height: 100vh;
 }
 
 #map {
@@ -30,7 +29,8 @@ p {
 
 #intro {
     padding: 15px 15px 15px 15px;
-    font-size: 13px;
+    height: 100%;
+    font-size: 14px;
     max-height: 100vh;
     overflow: auto;
 }
@@ -43,6 +43,7 @@ p {
 
  :root {
     --circle-radius: 5px;
+    --lejant-radius: 8px;
     --myyellow: #ffe000;
 }
 
@@ -58,9 +59,21 @@ a {
     color: var(--myyellow);
 }
 
+#hash {
+    color: var(--myyellow);
+    font-style: italic;
+}
+
 #controllers {
     margin: 5px 0px 15px 0px;
     padding: 15px 15px 15px 15px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#lejant-box {
+    margin: 5px 0px 15px 0px;
+    padding: 10px 10px 5px 20px;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.1);
 }
@@ -88,4 +101,100 @@ select {
 
 .leaflet-popup-content {
     margin: "5px 5px 5px 5px !important"
+}
+
+::-moz-selection {
+    background: #ffe00050;
+    color: #fff;
+}
+
+::selection {
+    background: #ffe00050;
+    color: #fff;
+}
+
+
+/*
+* ==========================================
+* Accordion Styling
+* ==========================================
+*/
+
+h6 a {
+    color: var(--myyellow) !important;
+}
+
+.text-dark {
+    color: var(--myyellow) !important;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.p-5 {
+    padding: 1.5rem !important;
+}
+
+.card-header {
+    padding: .5rem 1rem;
+}
+
+a.text-dark:focus,
+a.text-dark:hover {
+    color: var(--myyellow) !important;
+}
+
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.card {
+    background-color: #212529 !important
+}
+
+.collapsible-link::before {
+    content: '';
+    color: var(--myyellow);
+    width: 14px;
+    height: 2px;
+    background: var(--myyellow);
+    position: absolute;
+    top: calc(50% - 1px);
+    right: 1rem;
+    display: block;
+    transition: all 0.3s;
+}
+
+.collapsible-link::after {
+    content: '';
+    width: 2px;
+    height: 14px;
+    background: var(--myyellow);
+    position: absolute;
+    top: calc(50% - 7px);
+    right: calc(1rem + 6px);
+    display: block;
+    transition: all 0.3s;
+}
+
+.collapsible-link[aria-expanded='true']::after {
+    transform: rotate(90deg) translateX(-1px);
+}
+
+.collapsible-link[aria-expanded='true']::before {
+    transform: rotate(180deg);
+}
+
+
+/*
+* ==========================================
+* Lejant
+* ==========================================
+*/
+
+#lejant-circle {
+    border-radius: 50%;
+    width: var(--lejant-radius);
+    height: var(--lejant-radius);
+    background-color: #ffe000;
+    margin-top: var(--lejant-radius);
 }
