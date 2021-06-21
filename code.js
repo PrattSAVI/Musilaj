@@ -16,6 +16,24 @@ map.on('popupopen', function() {
     document.getElementsByTagName("head")[0].appendChild(tag);
 });
 
+map.on('mousedown', function(e) {
+    console.log("on map");
+
+    //"d-block position-relative text-dark text-uppercase collapsible-link py-2 collapsed"
+    //d-block position-relative text-dark text-uppercase collapsible-link py-2
+
+    $('.collapse').removeClass('show')
+    $('.d-block').addClass('collapsed')
+    $('.d-block').attr('aria-expanded', 'false')
+});
+
+$('#map').on('touchstart', function(e) {
+    $('.collapse').removeClass('show')
+    $('.d-block').addClass('collapsed')
+    $('.d-block').attr('aria-expanded', 'false')
+
+
+})
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: '© <a href="https://www.mapbox.com/about/maps/" style="color:#ffe000">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright"  style="color:#ffe000">OpenStreetMap</a> <strong><a  style="color:#ffe000" href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>',
