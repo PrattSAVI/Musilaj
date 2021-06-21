@@ -65,7 +65,7 @@ function style_mask() {
 // Polygons
 function generatePolygon(date, L) {
 
-    api_path = `https://prattsavi.github.io/Musilaj/apis/${date}.geojson`
+    api_path = `https://prattsavi.github.io/Musilaj/apis/composite/${date}.geojson`
 
     //Open 
     let geoJsonLayer = $.getJSON(api_path, function(data) {
@@ -126,65 +126,67 @@ function maskLayer(mask, pos, L) {
 let github = 'https://raw.githubusercontent.com/PrattSAVI/Musilaj/main';
 
 let twit_path = `${github}/Data/tw/Tweets.json`;
-let mask_path = `${github}/Data/mask_3.geojson`;
-let date_pos = `${github}/apis/dates.json`;
+//let mask_path = `${github}/Data/mask_3.geojson`;
+let date_pos = `${github}/apis/composite/dates.json`;
 
 
 // ------------------- WORK WITH DATA STARTS HERE--------------------------
 
 
 $.getJSON(date_pos, function(data) { // Dates JSON
-    $.getJSON(mask_path, function(mask) { // Mask geoJSON
+    //$.getJSON(mask_path, function(mask) { // Mask geoJSON
 
-        //extract unique dates from the json file
-        let dates = data.map(({
-            date: value
-        }) => value);
+    //extract unique dates from the json file
+    /*
+    let dates = data.map(({
+        date: value
+    }) => value);
+    */
 
-        //Insert  dates into dropdown & select first
-        dates.forEach(function(d, i) {
-            $('#date-selector').append(`<option value="${d}">${d}</option>`);
-            $("#date-selector").prop("selectedIndex", dates.length - 1); // Select first
-        });
+    //Insert  dates into dropdown & select first
+    data.forEach(function(d, i) {
+        $('#date-selector').append(`<option value="${d.date}">${d.name}</option>`);
+        $("#date-selector").prop("selectedIndex", data.length - 1); // Select first
+    });
 
-        //Create Initial musilaj  polygon
-        let sdate = dates[dates.length - 1];
-        let geoJsonLayer = generatePolygon(sdate, L);
+    //Create Initial musilaj  polygon
+    let sdate = data[data.length - 1].date;
+    let geoJsonLayer = generatePolygon(sdate, L);
 
-        //Initial Mask polygon
+    //Initial Mask polygon
+    /*
+    let pos = data.filter(d => d.date == sdate)[0].pos;
+    //maskLayer(mask, pos, L);
+    */
+
+
+    // Add Twitter Points -> This will not be removed.
+    $.getJSON(twit_path, function(twit) {
+        generateTws(twit, L);
+    });
+
+    // Create the filter -> Filter data based on dropdown.
+    $('#date-selector').change(function() {
+
+        //Delete all musilaj & mask geometry
+        del_all()
+
+        //If that fails, delete all paths. 
+        var feats = document.getElementById('feature-select')
+        if (feats != null) {
+            $('path').remove()
+        }
+
+        //Generate Polygon with new dates
+        this_date = $(this).val();
+        geoJsonLayer = generatePolygon(this_date, L);
+
+        //Generate mask
         /*
-        let pos = data.filter(d => d.date == sdate)[0].pos;
-        //maskLayer(mask, pos, L);
+        let pos = data.filter(d => d.date == this_date)[0].pos;
+        maskLayer(mask, pos, L);
         */
 
-
-        // Add Twitter Points -> This will not be removed.
-        $.getJSON(twit_path, function(twit) {
-            generateTws(twit, L);
-        });
-
-        // Create the filter -> Filter data based on dropdown.
-        $('#date-selector').change(function() {
-
-            //Delete all musilaj & mask geometry
-            del_all()
-
-            //If that fails, delete all paths. 
-            var feats = document.getElementById('feature-select')
-            if (feats != null) {
-                $('path').remove()
-            }
-
-            //Generate Polygon with new dates
-            this_date = $(this).val();
-            geoJsonLayer = generatePolygon(this_date, L);
-
-            //Generate mask
-            /*
-            let pos = data.filter(d => d.date == this_date)[0].pos;
-            maskLayer(mask, pos, L);
-            */
-
-        });
     });
+    //});
 })

@@ -1,35 +1,57 @@
-#%%
+
+# %%
+
+import os
 import pandas as pd
 
-path = r"C:\Users\csucuogl\Documents\GitHub\Musilaj\apis\dates.txt"
+path = r'C:\Users\csucuogl\Documents\GitHub\Musilaj\apis\composite'
 
-with open( path ) as f:
-    output = [s for line in f.readlines() for s in line.split(',')]
+files = os.listdir( path )
+files = [ i for i in files if i.split('.')[1] == 'geojson']
+names = [ i.split('.')[0] for i in files]
+print ( names )
 
-output
 # %%
 
-df = pd.DataFrame( columns=['date','pos'])
-df['date'] = output
+df = pd.DataFrame( columns=['date','name'])
 
-df = df.set_index('date')
+df['date'] = names
+df
 
-# %% assign times
+# %%
 
-df.loc['2021-04-02', 'pos'] = "marmara"
-df.loc['2021-04-14', 'pos'] = "izmit"
-df.loc['2021-04-22', 'pos'] = "marmara"
-df.loc['2021-04-29', 'pos'] = "izmit"
-df.loc['2021-05-14', 'pos'] = "izmit"
-df.loc['2021-05-17', 'pos'] = "marmara"
-df.loc['2021-05-19', 'pos'] = "izmit"
-df.loc['2021-05-24', 'pos'] = "izmit"
-df.loc['2021-06-06', 'pos'] = "marmara"
-df.loc['2021-06-11', 'pos'] = "marmara"
-df.loc['2021-06-13', 'pos'] = "izmit"
+def conv_month(date):
+    t = date.split("-")
+    month = t[1]
+
+    month_dict = {
+        "01":"Ocak",
+        "02":"Şubat",
+        "03":"Mart",
+        "04":"Nisan",
+        "05":"Mayıs",
+        "06":"Haziran",
+        "07":"Temmuz",
+        "08":"Ağustos",
+        "09":"Eylül",
+        "10":"Ekim",
+        "11":"Kasım",
+        "12":"Aralık"
+    }
+
+    for word, initial in month_dict.items():
+        month = month.replace(word.lower(), initial)
+
+    return "{}-{}-{}".format(t[2],month,t[0])
+
+
+df['name'] = df['date'].apply( lambda x: conv_month(x) )
+
 
 df
+
 # %%
 
-df.reset_index().to_json( r"C:\Users\csucuogl\Documents\GitHub\Musilaj\apis\dates.json" , orient='records' )
+df.to_json( r"C:\Users\csucuogl\Documents\GitHub\Musilaj\apis\composite\dates.json" , orient='records' )
+
 # %%
