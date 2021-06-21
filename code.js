@@ -16,12 +16,9 @@ map.on('popupopen', function() {
     document.getElementsByTagName("head")[0].appendChild(tag);
 });
 
+// Collapse Accordion when map is touched or dragged
 map.on('mousedown', function(e) {
     console.log("on map");
-
-    //"d-block position-relative text-dark text-uppercase collapsible-link py-2 collapsed"
-    //d-block position-relative text-dark text-uppercase collapsible-link py-2
-
     $('.collapse').removeClass('show')
     $('.d-block').addClass('collapsed')
     $('.d-block').attr('aria-expanded', 'false')
@@ -31,8 +28,6 @@ $('#map').on('touchstart', function(e) {
     $('.collapse').removeClass('show')
     $('.d-block').addClass('collapsed')
     $('.d-block').attr('aria-expanded', 'false')
-
-
 })
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -157,8 +152,10 @@ $.getJSON(date_pos, function(data) { // Dates JSON
         let geoJsonLayer = generatePolygon(sdate, L);
 
         //Initial Mask polygon
+        /*
         let pos = data.filter(d => d.date == sdate)[0].pos;
-        maskLayer(mask, pos, L);
+        //maskLayer(mask, pos, L);
+        */
 
 
         // Add Twitter Points -> This will not be removed.
@@ -183,8 +180,10 @@ $.getJSON(date_pos, function(data) { // Dates JSON
             geoJsonLayer = generatePolygon(this_date, L);
 
             //Generate mask
+            /*
             let pos = data.filter(d => d.date == this_date)[0].pos;
             maskLayer(mask, pos, L);
+            */
 
         });
     });
