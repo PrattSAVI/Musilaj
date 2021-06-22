@@ -27,7 +27,8 @@ for i,r in df.iterrows():
         data = resp.json()
         a.append( data['html'] )
     except:
-        print (resp.text )
+        #print (resp.text )
+        print( r['link'])
         a.append( None )
 
 
@@ -37,8 +38,8 @@ df
 
 # %%
 
-df = df[['embed','lat','lon','date']]
-df['date'] = pd.to_datetime( df['date'])
+df = df[['embed','lat','lon']]
+#df['date'] = pd.to_datetime( df['date'])
 
 
 df.head()
