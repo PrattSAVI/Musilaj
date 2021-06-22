@@ -18,7 +18,6 @@ map.on('popupopen', function() {
 
 // Collapse Accordion when map is touched or dragged
 map.on('mousedown', function(e) {
-    console.log("on map");
     $('.collapse').removeClass('show')
     $('.d-block').addClass('collapsed')
     $('.d-block').attr('aria-expanded', 'false')
@@ -99,13 +98,17 @@ function generateTws(data, L) {
 
     data.forEach(function(d, i) {
 
-        var popup_content = d.embed.split('<script')[0]; //Remove script tag
+        //console.log(d.embed);
 
-        var marker = L.marker([d.lat, d.lon], {
-            icon: div_circle,
-        }).addTo(map);
+        if (d.embed != null) {
+            var popup_content = d.embed.split('<script')[0]; //Remove script tag
 
-        marker.bindPopup(popup_content);
+            var marker = L.marker([d.lat, d.lon], {
+                icon: div_circle,
+            }).addTo(map);
+
+            marker.bindPopup(popup_content);
+        }
     });
 };
 
@@ -134,14 +137,6 @@ let date_pos = `${github}/apis/composite/dates.json`;
 
 
 $.getJSON(date_pos, function(data) { // Dates JSON
-    //$.getJSON(mask_path, function(mask) { // Mask geoJSON
-
-    //extract unique dates from the json file
-    /*
-    let dates = data.map(({
-        date: value
-    }) => value);
-    */
 
     //Insert  dates into dropdown & select first
     data.forEach(function(d, i) {
@@ -152,13 +147,6 @@ $.getJSON(date_pos, function(data) { // Dates JSON
     //Create Initial musilaj  polygon
     let sdate = data[data.length - 1].date;
     let geoJsonLayer = generatePolygon(sdate, L);
-
-    //Initial Mask polygon
-    /*
-    let pos = data.filter(d => d.date == sdate)[0].pos;
-    //maskLayer(mask, pos, L);
-    */
-
 
     // Add Twitter Points -> This will not be removed.
     $.getJSON(twit_path, function(twit) {
@@ -180,12 +168,6 @@ $.getJSON(date_pos, function(data) { // Dates JSON
         //Generate Polygon with new dates
         this_date = $(this).val();
         geoJsonLayer = generatePolygon(this_date, L);
-
-        //Generate mask
-        /*
-        let pos = data.filter(d => d.date == this_date)[0].pos;
-        maskLayer(mask, pos, L);
-        */
 
     });
     //});
