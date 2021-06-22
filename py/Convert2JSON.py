@@ -36,8 +36,9 @@ df['embed'] = a
 
 df
 
-# %%
+#%% Remove empty
 
+df = df[~df['embed'].isnull()]
 df = df[['embed','lat','lon']]
 #df['date'] = pd.to_datetime( df['date'])
 
@@ -47,4 +48,10 @@ df.head()
 # %%
 
 df.to_json(r'C:\Users\csucuogl\Documents\GitHub\Musilaj\Data\tw\Tweets.json' , orient='records')
+# %%
+
+
+test = pd.read_json( r'C:\Users\csucuogl\Documents\GitHub\Musilaj\Data\tw\Tweets.json')
+test[ test['embed'].isnull() ]
+
 # %%
