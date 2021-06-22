@@ -3,6 +3,7 @@
 import pandas as pd
 
 df = pd.read_csv( r"C:\Users\csucuogl\Dropbox\Musilaj_Test\Tweets.csv" )
+print( "{} adet twit var".format(len(df)) )
 df.head()
 
 
@@ -12,26 +13,27 @@ import requests
 
 a=[]
 for i,r in df.iterrows():
-    print( r['link'] )
+    #print( r['link'] )
 
     params = {
         'omit_script': '1',
         'maxheight':300,
         'limit':1
-
         }
 
     links = 'https://publish.twitter.com/oembed?url={}'.format(r['link'])
     resp = requests.get( links , params=params )
-    data = resp.json()
-    print(data['html'])
-    a.append( data['html'] )
+    try:
+        data = resp.json()
+        a.append( data['html'] )
+    except:
+        print (resp.text )
+        a.append( None )
 
-    break
 
-#df['embed'] = a
+df['embed'] = a
 
-#df
+df
 
 # %%
 
@@ -43,5 +45,5 @@ df.head()
 
 # %%
 
-df.to_json(r'C:\Users\csucuogl\Dropbox\Musilaj_Test\Tweets.json' , orient='records')
+df.to_json(r'C:\Users\csucuogl\Documents\GitHub\Musilaj\Data\tw\Tweets.json' , orient='records')
 # %%
