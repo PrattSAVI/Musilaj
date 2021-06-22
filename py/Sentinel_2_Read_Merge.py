@@ -13,8 +13,11 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\210402"
+date = '210203'
+folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\{}".format(date)
 folder_list = os.listdir( folder_path )
+
+folder_list = [i for i in folder_list if not 'desktop' in i]
 
 [i for i in folder_list]
 
@@ -126,7 +129,7 @@ import fiona
 import rasterio.mask
 
 img_path = folder_path # Bu ayni olmayabilir. !!!
-date = "20210402" #Define a single date to process!!!!!
+#date = "20210402" #Define a single date to process!!!!!
 allf = os.listdir( img_path )
 
 #Images
@@ -136,10 +139,6 @@ allf = [i for i in allf if i.split(".")[1]=="tiff" ]
 allf =  [i for i in allf if date in i ]
 file_list = [os.path.join(img_path,i) for i in allf]
 file_list = [file_list[0],file_list[2],file_list[1]]
-
-file_list
-
-# %% MERGE BANDS - SAVE
 
 # Read metadata of first file
 with rasterio.open(file_list[0]) as src0:
@@ -162,6 +161,7 @@ with fiona.open( r"D:\SAVI\Musilaj_Mapping\GIS_Data\Coast_v3.shp" , "r") as shap
     shapes = [feature["geometry"] for feature in shapefile]
 
 with rasterio.open( tiff_path ) as src:
+    #Mask Here
     out_image, out_transform = rasterio.mask.mask(src, shapes, crop=True)
     out_meta = src.meta
 
