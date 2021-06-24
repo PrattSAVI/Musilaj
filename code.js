@@ -43,8 +43,8 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 function style(data) {
     return {
         fillColor: '#ffe000', // Here is the categorical coloring.
-        color: '#ffffff',
-        weight: 0.15,
+        color: '#ffe000',
+        weight: 0.5,
         opacity: 1,
         fillOpacity: 0.7
     };
