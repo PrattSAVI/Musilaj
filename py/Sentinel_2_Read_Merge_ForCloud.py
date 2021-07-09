@@ -13,7 +13,7 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-date = '210226'
+date = '210701'
 folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\{}".format(date)
 folder_list = os.listdir( folder_path )
 
@@ -30,37 +30,6 @@ df['pos'] = [r['file'].split("_")[len(r['file'].split("_"))-4] for i,r in df.ite
 df['band'] = [r['file'].split("_")[len(r['file'].split("_"))-2] for i,r in df.iterrows()]
 df['folder'] = folder_path
 df
-
-
-#%%
-
-for band in bands:
-    for this_file in folder_list:
-
-        path = os.path.join( folder_path , this_file)
-        path = os.path.join( path , "GRANULE")
-        path = os.path.join( path , os.listdir( path )[0] )
-        path = os.path.join( path , "IMG_DATA")
-        path = os.path.join( path , "R20m")
-
-        for i in os.listdir( path ):
-            if (band in i) :
-
-                date = i.split("_")[1].split("T")[0]
-                data = [[path,i,date,band]]
-
-                temp = pd.DataFrame( 
-                    columns=['folder','file','date','band'],
-                    data = data )
-                df = df.append( temp )
-
-df.index = [i for i in range(len(df))]
-df['pos'] = [r.split('_')[0] for i,r in df['file'].iteritems()]
-
-df = df[['pos','band','date','file','folder']]
-
-df
-
 
 #%% MERGE AND PLOT
 
