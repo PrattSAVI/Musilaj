@@ -13,7 +13,7 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-date = '210701'
+date = '210716'
 folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\{}".format(date)
 folder_list = os.listdir( folder_path )
 
@@ -110,8 +110,10 @@ allf = os.listdir( img_path )
 allf = [i for i in allf if i.split(".")[1]=="tiff" ]
 
 #date
-allf =  [i for i in allf if date in i ]
+#allf =  [i for i in allf if date in i ]
+allf =  [i for i in allf if not "TCI" in i ]
 file_list = [os.path.join(img_path,i) for i in allf]
+print (file_list)
 file_list = [file_list[0],file_list[2],file_list[1]]
 
 # Read metadata of first file
