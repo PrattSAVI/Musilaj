@@ -3,6 +3,7 @@
 # This code merges all raster data in a folder.
 # Data is from Sentinel Images. 
 # Change the Env to one that can run full rasterio !!!!.
+# All you need to change is the data variable. 
 #%% DEPENDECIES
 #Make sure the prefix is set to Remote Raster Env
 import sys
@@ -13,13 +14,11 @@ print( sys.prefix )
 
 # %% Sentinel Folders
 
-date = '210716'
+date = '210728' #ONLY CHANGE THIS
 folder_path = r"D:\SAVI\Musilaj_Mapping\RasterData\{}".format(date)
 folder_list = os.listdir( folder_path )
 
 folder_list = [i for i in folder_list if not 'desktop' in i]
-
-#[i for i in folder_list]
 
 bands = ['B04','B11','B8A']
 df = pd.DataFrame(columns=['folder','file','date','band'])
