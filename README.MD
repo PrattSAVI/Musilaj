@@ -1,5 +1,6 @@
 
-## This folder contains all information used to create the web map showing the sea-mucus (foam) on Marmara Sea.  
+### Marmara Sea Sea Mucus Visualization
+#### This folder contains all information used to create the web map showing the sea-mucus (foam) on Marmara Sea.  
 
 You can see the site in action [here](https://prattsavi.github.io/Musilaj/single.html).  
 
